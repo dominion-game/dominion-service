@@ -22,4 +22,7 @@ public class Play {
   @JoinColumn(name = "turn_id", nullable = false, updatable = false)
   private Turn turn;
 
+  @NonNull
+  @Column(name="card_played")
+  private int
 }
