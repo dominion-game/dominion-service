@@ -19,8 +19,10 @@ public class Play {
 
   @NonNull
   @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
+  @JoinColumn(name = "turn_id", nullable = false, updatable = false)
   private Turn turn;
 
-
+  @NonNull
+  @Column(name="card_played")
+  private int
 }
