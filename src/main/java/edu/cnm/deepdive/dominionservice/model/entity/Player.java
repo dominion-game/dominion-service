@@ -25,6 +25,4 @@ public class Player {
 
   @Column
   private String whoseTurn;
-
-
 }
