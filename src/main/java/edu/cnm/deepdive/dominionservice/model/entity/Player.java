@@ -24,7 +24,7 @@ public class Player {
   private int playerScore;
 
   @Column
-  private String whosTurn;
+  private String whoseTurn;
 
 
 }
