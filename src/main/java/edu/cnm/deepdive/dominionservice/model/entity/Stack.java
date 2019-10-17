@@ -28,13 +28,13 @@ public class Stack {
   @JoinColumn(nullable = false, updatable = false)
   private Game game;
 
-  @Column
+  @Column(name="is_trash")
   private boolean isTrash;
 
-  @Column
+  @Column(name="stack_type")
   private String stackType;
 
-  @Column
+  @Column(name="stack_count")
   private int stackCount;
 
   public Long getId() {

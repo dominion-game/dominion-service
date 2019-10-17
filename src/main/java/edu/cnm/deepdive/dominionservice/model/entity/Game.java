@@ -19,6 +19,17 @@ public class Game {
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
   private List<Stack> stacks= new LinkedList<>();
 
+  @OneToMany(mappedBy= "game", cascade = CascadeType.ALL)
+  private List<Player> players = new LinkedList<>();
+
+  public List<Player> getPlayers() {
+    return players;
+  }
+
+  public void setPlayers(List<Player> players) {
+    this.players = players;
+  }
+
   public Long getId() {
     return id;
   }
