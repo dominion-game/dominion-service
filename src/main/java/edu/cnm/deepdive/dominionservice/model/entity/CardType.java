@@ -17,6 +17,6 @@ public class CardType {
 
   @NonNull
   @OneToOne
-  @JoinColumn(name= "card_id", updatable = false, nullable = false)
+  @JoinColumn(updatable = false, nullable = false)
   private Card card;
 }

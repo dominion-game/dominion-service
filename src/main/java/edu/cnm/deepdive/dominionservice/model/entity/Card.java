@@ -17,12 +17,12 @@ public class Card {
 
   @NonNull
   @ManyToOne
-  @JoinColumn(name = "player_id", nullable = false, updatable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private Player player;
 
   @NonNull
   @ManyToOne
-  @JoinColumn(name = "stack_id", nullable = false, updatable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private Stack stack;
 
 

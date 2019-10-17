@@ -17,6 +17,14 @@ public class Player {
 
   @NonNull
   @ManyToOne
-  @JoinColumn(name = "game_id", nullable = false, updatable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private Game game;
+
+  @Column()
+  private int playerScore;
+
+  @Column
+  private String whosTurn;
+
+
 }

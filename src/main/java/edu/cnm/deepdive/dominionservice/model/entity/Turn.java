@@ -17,7 +17,7 @@ public class Turn {
 
   @NonNull
   @ManyToOne
-  @JoinColumn(name = "player_id", nullable = false, updatable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private Player player;
 
 }

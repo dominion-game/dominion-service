@@ -19,8 +19,17 @@ public class Stack {
 
   @NonNull
   @ManyToOne
-  @JoinColumn(name = "game_id", nullable = false, updatable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private Game game;
+
+  @Column
+  private boolean isTrash;
+
+  @Column
+  private String stackType;
+
+  @Column
+  private int stackCount;
 
   // don't need setters on Id's or timestamps
 }
