@@ -14,6 +14,7 @@ public class Card {
   @GeneratedValue
   @Column(name = "card_id", updatable = false, nullable = false)
   private Long id;
+  //why object?
 
   @NonNull
   @ManyToOne
@@ -24,6 +25,21 @@ public class Card {
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
   private Stack stack;
+
+
+  @NonNull
+  private String state;
+  //in player (deck, hand, discard), trash (isTrash stack), stack
+
+  @NonNull
+  private String type;
+  //money, action, victory point---possibly unnecessary
+
+  @NonNull
+  private String name;
+  //name of card
+
+
 
 
 }

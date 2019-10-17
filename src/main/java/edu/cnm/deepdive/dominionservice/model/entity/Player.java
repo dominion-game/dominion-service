@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import java.util.LinkedList;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,4 +26,10 @@ public class Player {
 
   @Column
   private String whoseTurn;
+
+  private LinkedList<Card> deck;
+
+  private LinkedList<Card> discard;
+
+  private LinkedList<Card> hand;
 }
