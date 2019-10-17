@@ -11,6 +11,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Fetch;
 import org.springframework.lang.NonNull;
 
@@ -19,7 +20,7 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 @Table(
-    indexes = @Index(columnList = "play_id")
+    uniqueConstraints = @UniqueConstraint(columnName = "play_id", "turn_id", "player_id")
 )
 public class Play {
   /**Each action taken by a player generates a new play. Typically, most of the fields

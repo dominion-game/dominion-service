@@ -25,7 +25,7 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 @Table(
-    indexes = @Index(columnList = "turn_id")
+    uniqueConstraints = @UniqueConstraint(columnNames = {"turn_id", "player_id"})
 )
 public class Turn {
   @Id
