@@ -5,11 +5,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
 @Entity
+@Table(
+    indexes = {@Index(columnList = "stackType"),
+    @Index(columnList = "stackCount")}
+)
 public class Stack {
 
   @Id
