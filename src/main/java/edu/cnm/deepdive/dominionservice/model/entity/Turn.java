@@ -1,17 +1,35 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import java.util.LinkedList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import org.springframework.lang.NonNull;
 
+/**
+ * Keeps a table consisting of every turn taken by both players,
+ * Organized by a Turn ID and a Player ID. For example, Turn 1-Player 1
+ * Is player 1's first turn, while Turn 1- Player 2 is Player 2's First Turn.
+ * When HasFinished updates to True, the game's state resets for the next turn.
+ */
 @Entity
+@Table(
+    indexes = @Index(columnList = "turn_id")
+)
 public class Turn {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "turn_id", updatable = false, nullable = false)
   private Long id;
 
@@ -19,6 +37,7 @@ public class Turn {
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
   private Player player;
+
 
   @NonNull
   @Column(name="buys")
@@ -36,6 +55,14 @@ public class Turn {
   @Column(name="has_drawn")
   private boolean hasDrawn = false;
 
+  @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL,orphanRemoval = true)
+  @OrderBy("play_id ASC")
+  private List<Play> plays = new LinkedList<>();
+
+  public List<Play> getPlays() {
+    return plays;
+  }
+
   public boolean isHasDrawn() {
     return hasDrawn;
   }
@@ -48,9 +75,6 @@ public class Turn {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public Player getPlayer() {
     return player;
@@ -83,4 +107,5 @@ public class Turn {
   public void setHasFinished(boolean hasFinished) {
     this.hasFinished = hasFinished;
   }
+
 }
