@@ -31,5 +31,35 @@ public class Stack {
   @Column
   private int stackCount;
 
-  // don't need setters on Id's or timestamps
+  public Long getId() {
+    return id;
+  }
+
+  public Game getGame() {
+    return game;
+  }
+
+  public boolean isTrash() {
+    return isTrash;
+  }
+
+  public void setTrash(boolean trash) {
+    isTrash = trash;
+  }
+
+  public String getStackType() {
+    return stackType;
+  }
+
+  public void setStackType(String stackType) {
+    this.stackType = stackType;
+  }
+
+  public int getStackCount() {
+    return stackCount;
+  }
+
+  public void setStackCount(int stackCount) {
+    this.stackCount = stackCount;
+  }
 }
