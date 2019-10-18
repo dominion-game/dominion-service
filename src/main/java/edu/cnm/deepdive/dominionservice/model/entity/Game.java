@@ -9,16 +9,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+
 @Entity
 public class Game {
+
+  /**
+   * Creates the primary Game Id.
+   */
   @Id
   @GeneratedValue
   @Column(name = "game_id", updatable = false, nullable = false)
   private Long id;
 
+  /**
+   * Returns a list of stacks.
+   */
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
   private List<Stack> stacks= new LinkedList<>();
 
+  /**
+   * Returns a list of Players.
+   */
   @OneToMany(mappedBy= "game", cascade = CascadeType.ALL)
   private List<Player> players = new LinkedList<>();
 

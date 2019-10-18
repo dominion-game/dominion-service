@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
+/**
+ * Keeps track of all the various stacks (money, action, and victory point) used in the game.
+ */
 @Entity
 @Table(
     indexes = {@Index(columnList = "stackType"),
@@ -18,22 +21,34 @@ import org.springframework.lang.NonNull;
 )
 public class Stack {
 
+  /**
+   * Creates the primary key for Stack.
+   */
   @Id
   @GeneratedValue
   @Column(name = "stack_id", updatable = false, nullable = false)
   private Long id;
-
+  /**
+   * Associates the stacks with a given game.
+   */
   @NonNull
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
   private Game game;
-
+  /**
+   * Given certain action cards, a player may trash cards from their hand.
+   */
   @Column(name="is_trash")
   private boolean isTrash;
-
+  /**
+   * Stacks are sorted by type: Money, Action, Victory Point.
+   */
   @Column(name="stack_type")
   private String stackType;
-
+  /**
+   * Keeps track of the number of cards per stack. This helps with player strategy and also game
+   * terminating requirements.
+   */
   @Column(name="stack_count")
   private int stackCount;
 
