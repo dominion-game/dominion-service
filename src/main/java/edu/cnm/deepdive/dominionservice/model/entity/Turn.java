@@ -24,37 +24,56 @@ import org.springframework.lang.NonNull;
  * When HasFinished updates to True, the game's state resets for the next turn.
  */
 @Entity
-@Table(
-    uniqueConstraints = @UniqueConstraint(columnNames = {"turn_id", "player_id"})
-)
+@Table
 public class Turn {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "turn_id", updatable = false, nullable = false)
   private Long id;
 
+  /**
+   * Foreign Key playerId, refers to the player who took this turn.
+   */
   @NonNull
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
-  private Player player;
+  private int playerId;
 
-
+  /**
+   * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is triggered
+   * to move to the next phase (discard).
+   */
   @NonNull
   @Column(name="buys")
   private int buysRemaining;
 
+  /**
+   * Actions Remaining- a counter that iterates down to zero. When it returns zero, a method is triggered
+   * to move to the next phase (buy).
+   */
   @NonNull
   @Column(name="actions")
   private int actionsRemaining;
 
+  /**
+   * Boolean has_discarded indicates whether or not the player has discarded. Can correspond
+   * to a LiveData object in the Room implementation? Triggers the next phase.
+   */
   @NonNull
   @Column(name="has_discarded")
-  private boolean hasFinished = false;
+  private boolean hasDiscarded = false;
 
+  /**
+   * Boolean has_discarded indicates whether or not the player has drawn, a necessary
+   * step to end one's turn. Can correspon to a LiveData object in the Room implementation? Triggers the next phase.
+   */
   @NonNull
   @Column(name="has_drawn")
   private boolean hasDrawn = false;
 
+  /**
+   * Includes a list of plays per turn.
+   */
   @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL,orphanRemoval = true)
   @OrderBy("play_id ASC")
   private List<Play> plays = new LinkedList<>();
