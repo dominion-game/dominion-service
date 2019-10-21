@@ -13,7 +13,7 @@ public class Card {
   @Id
   @GeneratedValue
   @Column(name = "card_id", updatable = false, nullable = false)
-  private long id;
+  private int id;
 
   /***
    * cost of card
@@ -27,7 +27,7 @@ public class Card {
    */
   @NonNull
   @ManyToOne
-  private long location;
+  private int location;
 
   /***
    * name of card
@@ -40,7 +40,7 @@ public class Card {
     this.location = location;
   }
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
@@ -48,7 +48,7 @@ public class Card {
     return cost;
   }
 
-  public long getLocation() {
+  public int getLocation() {
     return location;
   }
 

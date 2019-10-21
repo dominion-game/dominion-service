@@ -32,14 +32,6 @@ public class Play {
   private Long id;
 
 
-  /**
-   * Stores the id of the Player that took the action.
-   */
-  @NonNull
-  @JoinColumn(name= "player_id", nullable = false, updatable = false)
-  @ManyToOne(fetch=FetchType.EAGER, optional = false)
-  private int playerId;
-
   /**Each action taken by a player generates a new play. Typically, most of the fields
    * will be null or zero in the interest of separating out each action individually.
    */
