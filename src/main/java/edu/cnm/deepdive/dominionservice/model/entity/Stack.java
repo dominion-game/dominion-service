@@ -11,8 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
+
 /**
- * Keeps track of all the various stacks (money, action, and victory point) used in the game.
+ * Stacks are made up of cards that are used be the player to progress through a game. Stacks are
+ * arranged by types. The number of cards in each stack will be tracked throughout the game.
  */
 @Entity
 @Table(
@@ -22,65 +24,120 @@ import org.springframework.lang.NonNull;
 public class Stack {
 
   /**
-   * Creates the primary key for Stack.
+   * Generates primary key id.
    */
   @Id
   @GeneratedValue
   @Column(name = "stack_id", updatable = false, nullable = false)
   private Long id;
-  /**
-   * Associates the stacks with a given game.
-   */
+
+
   @NonNull
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
   private Game game;
+
   /**
-   * Given certain action cards, a player may trash cards from their hand.
-   */
-  @Column(name="is_trash")
-  private boolean isTrash;
-  /**
-   * Stacks are sorted by type: Money, Action, Victory Point.
+   *  The variable that holds the stack type. Allowed types are: Bronze, Silver, Gold, Estate, Duchy,
+   *  Province, Cellar, Moat, Village, Workshop, Smithy, Remodel, Militia, Market, Mine, Merchant,
+   *  Trash.
+   *
    */
   @Column(name="stack_type")
   private String stackType;
+
   /**
-   * Keeps track of the number of cards per stack. This helps with player strategy and also game
-   * terminating requirements.
+   * The number of stacks with one or more cards.
    */
   @Column(name="stack_count")
   private int stackCount;
 
+  private Stack stack;
+
+  /**
+   * Gets id.
+   *
+   * @return the id
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * Gets game.
+   *
+   * @return the game
+   */
   public Game getGame() {
     return game;
   }
 
-  public boolean isTrash() {
-    return isTrash;
-  }
-
-  public void setTrash(boolean trash) {
-    isTrash = trash;
-  }
-
+  /**
+   * Gets stack type.
+   *
+   * @return the stack type
+   */
   public String getStackType() {
     return stackType;
   }
 
+  /**
+   * Sets stack type.
+   *
+   * @param stackType the stack type
+   */
   public void setStackType(String stackType) {
     this.stackType = stackType;
   }
 
+  /**
+   * Gets stack count.
+   *
+   * @return the stack count
+   */
   public int getStackCount() {
     return stackCount;
   }
 
+  /**
+   * Sets stack count.
+   *
+   * @param stackCount the stack count
+   */
   public void setStackCount(int stackCount) {
     this.stackCount = stackCount;
   }
+
+  public Stack getStack() {
+    return stack;
+  }
+
+  public void setStack(Stack stack) {
+    this.stack = stack;
+  }
+
+  /**
+   * The enum Stack type.
+   */
+  public enum StackType {
+    Bronze,
+    Silver,
+    Gold,
+    Estate,
+    Duchy,
+    Province,
+    Cellar,
+    Moat,
+    Village,
+    Workshop,
+    Smithy,
+    Remodel,
+    Militia,
+    Market,
+    Mine,
+    Merchant,
+    Trash;
+  }
+
 }
+
