@@ -22,19 +22,22 @@ public class Player {
   @NonNull
   @ManyToOne
   @JoinColumn(nullable = false, updatable = false)
-  private Game game;
+  private int gameId;
 
   @Column
   private int playerScore;
 
   @Column
-  private long whoseTurn;
+  private int whoseTurn;
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Card> deck = new LinkedList<>();
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Card> discard = new LinkedList<>();
+
+  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
+  private List<Card> hand = new LinkedList<>();
 
   public void setPlayerScore(int playerScore) {
     this.playerScore = playerScore;
@@ -60,15 +63,15 @@ public class Player {
     return id;
   }
 
-  public Game getGame() {
-    return game;
+  public int getGameId() {
+    return gameId;
   }
 
   public int getPlayerScore() {
     return playerScore;
   }
 
-  public long getWhoseTurn() {
+  public int getWhoseTurn() {
     return whoseTurn;
   }
 
@@ -84,6 +87,5 @@ public class Player {
     return hand;
   }
 
-  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
-  private List<Card> hand = new LinkedList<>();
+
 }

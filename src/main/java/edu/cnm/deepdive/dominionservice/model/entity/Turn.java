@@ -56,22 +56,6 @@ public class Turn {
   private int actionsRemaining;
 
   /**
-   * Boolean has_discarded indicates whether or not the player has discarded. Can correspond
-   * to a LiveData object in the Room implementation? Triggers the next phase.
-   */
-  @NonNull
-  @Column(name="has_discarded")
-  private boolean hasDiscarded = false;
-
-  /**
-   * Boolean has_discarded indicates whether or not the player has drawn, a necessary
-   * step to end one's turn. Can correspon to a LiveData object in the Room implementation? Triggers the next phase.
-   */
-  @NonNull
-  @Column(name="has_drawn")
-  private boolean hasDrawn = false;
-
-  /**
    * Includes a list of plays per turn.
    */
   @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL,orphanRemoval = true)
@@ -82,13 +66,6 @@ public class Turn {
     return plays;
   }
 
-  public boolean isHasDrawn() {
-    return hasDrawn;
-  }
-
-  public void setHasDrawn(boolean hasDrawn) {
-    this.hasDrawn = hasDrawn;
-  }
 
   public Long getId() {
     return id;
@@ -119,12 +96,5 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
-  public boolean isHasFinished() {
-    return hasFinished;
-  }
-
-  public void setHasFinished(boolean hasFinished) {
-    this.hasFinished = hasFinished;
-  }
 
 }
