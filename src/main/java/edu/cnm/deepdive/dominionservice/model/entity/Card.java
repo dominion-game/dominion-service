@@ -13,31 +13,63 @@ public class Card {
   @Id
   @GeneratedValue
   @Column(name = "card_id", updatable = false, nullable = false)
-  private Long id;
-  //why object?
+  private long id;
 
+  /***
+   * cost of card
+   */
+  @NonNull
+  @Column(updatable = false)
+  private int cost;
+
+  /***
+   * where card located
+   */
   @NonNull
   @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
-  private Player player;
+  private long location;
+
+  /***
+   * name of card
+   */
+  @NonNull
+  @Column(updatable = false)
+  private String cardName;
+
+  public void setLocation(long location) {
+    this.location = location;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public int getCost() {
+    return cost;
+  }
+
+  public long getLocation() {
+    return location;
+  }
+
+  public String getCardName() {
+    return cardName;
+  }
+
+  public CardType getCardType() {
+    return cardType;
+  }
 
   @NonNull
-  @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
-  private Stack stack;
+  private CardType cardType;
 
+  public enum CardType{
+    MONEY,
+  ACTION,
+  VICTORY;
 
-  @NonNull
-  private String state;
-  //in player (deck, hand, discard), trash (isTrash stack), stack
+  }
 
-  @NonNull
-  private String type;
-  //money, action, victory point---possibly unnecessary
-
-  @NonNull
-  private String name;
-  //name of card
 
 
 
