@@ -97,9 +97,6 @@ public class Play {
     this.goldSpent = goldSpent;
   }
 
-  public int getPlayerId() {
-    return playerId;
-  }
 
   public int getCardBoughtId() {
     return cardBoughtId;

@@ -3,6 +3,7 @@ package edu.cnm.deepdive.dominionservice.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -33,8 +34,8 @@ public class Stack {
 
 
   @NonNull
-  @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="game_id", nullable = false, updatable = false)
   private Game game;
 
   /**
@@ -44,7 +45,7 @@ public class Stack {
    *
    */
   @Column(name="stack_type")
-  private String stackType;
+  private StackType stackType;
 
   /**
    * The number of stacks with one or more cards.
@@ -52,7 +53,8 @@ public class Stack {
   @Column(name="stack_count")
   private int stackCount;
 
-  private Stack stack;
+
+ // private List<Stack> stacks;
 
   /**
    * Gets id.
@@ -77,7 +79,7 @@ public class Stack {
    *
    * @return the stack type
    */
-  public String getStackType() {
+  public StackType getStackType() {
     return stackType;
   }
 
@@ -86,7 +88,7 @@ public class Stack {
    *
    * @param stackType the stack type
    */
-  public void setStackType(String stackType) {
+  public void setStackType(StackType stackType) {
     this.stackType = stackType;
   }
 
@@ -106,14 +108,6 @@ public class Stack {
    */
   public void setStackCount(int stackCount) {
     this.stackCount = stackCount;
-  }
-
-  public Stack getStack() {
-    return stack;
-  }
-
-  public void setStack(Stack stack) {
-    this.stack = stack;
   }
 
   /**
@@ -137,7 +131,21 @@ public class Stack {
     Mine,
     Merchant,
     Trash;
+
+    String [] symbols = {"Bronze", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Moat", "Village",
+    "Workshop", "Smithy", "Remodel", "Militia", "Market", "Mine", "Merchant", "Trash"};
+
+    public String toString(StackType stackType) {
+      return stackType.getSymbol();
+   }
+   private String getSymbol(){
+      return symbols[ordinal()];
+   }
   }
 
+  /**public static void main(String[] args) {
+    System.out.println(StackType.Merchant.toString());
+  }
+*/
 }
 

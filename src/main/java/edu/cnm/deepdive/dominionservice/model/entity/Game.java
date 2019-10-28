@@ -32,14 +32,14 @@ public class Game {
    * Returns a list of stacks. This list documents all of the stacks available to the players. It
    * will be updated throughout the game as players pull cards for the stacks.
    */
-  @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "stack", cascade = CascadeType.ALL)
   private List<Stack> stacks= new LinkedList<>();
 
   /**
    * Returns a list of Players. This allows for keeping track of players, turns, and points
    * throughout the game.
    */
-  @OneToMany(mappedBy= "game", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Player> players = new LinkedList<>();
 
   /**

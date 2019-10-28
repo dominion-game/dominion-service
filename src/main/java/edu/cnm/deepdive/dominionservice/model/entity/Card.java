@@ -2,6 +2,7 @@ package edu.cnm.deepdive.dominionservice.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,8 +27,9 @@ public class Card {
    * where card located
    */
   @NonNull
-  @ManyToOne
-  private int location;
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="location_id", nullable = true, updatable = false)
+  private Location location;
 
   /***
    * name of card
@@ -36,7 +38,7 @@ public class Card {
   @Column(updatable = false)
   private String cardName;
 
-  public void setLocation(long location) {
+  public void setLocation(Location location) {
     this.location = location;
   }
 
@@ -48,7 +50,7 @@ public class Card {
     return cost;
   }
 
-  public int getLocation() {
+  public Location getLocation() {
     return location;
   }
 

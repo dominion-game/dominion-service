@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,9 +36,9 @@ public class Turn {
    * Foreign Key playerId, refers to the player who took this turn.
    */
   @NonNull
-  @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
-  private int playerId;
+  @ManyToOne (fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="player_id", nullable = false, updatable = false)
+  private Player player;
 
   /**
    * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is triggered

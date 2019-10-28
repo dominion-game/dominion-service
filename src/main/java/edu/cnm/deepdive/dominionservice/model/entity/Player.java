@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -20,9 +21,9 @@ public class Player {
   private Long id;
 
   @NonNull
-  @ManyToOne
-  @JoinColumn(nullable = false, updatable = false)
-  private int gameId;
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="game_id", nullable = false, updatable = false)
+  private Game game;
 
   @Column
   private int playerScore;
@@ -30,7 +31,13 @@ public class Player {
   @Column
   private int whoseTurn;
 
-  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
+  private List<Turn> turns = new LinkedList<>();
+
+  @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
+  private List<Location> locations = new LinkedList<>();
+
+  /**@OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
   private List<Card> deck = new LinkedList<>();
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
@@ -38,16 +45,16 @@ public class Player {
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Card> hand = new LinkedList<>();
-
+*/
   public void setPlayerScore(int playerScore) {
     this.playerScore = playerScore;
   }
 
   public void setWhoseTurn(long whoseTurn) {
-    this.whoseTurn = whoseTurn;
+    this.whoseTurn = (int) whoseTurn;
   }
 
-  public void setDeck(List<Card> deck) {
+ /** public void setDeck(List<Card> deck) {
     this.deck = deck;
   }
 
@@ -58,13 +65,13 @@ public class Player {
   public void setHand(List<Card> hand) {
     this.hand = hand;
   }
-
+*/
   public Long getId() {
     return id;
   }
 
-  public int getGameId() {
-    return gameId;
+  public Game getGame() {
+    return game;
   }
 
   public int getPlayerScore() {
@@ -75,7 +82,7 @@ public class Player {
     return whoseTurn;
   }
 
-  public List<Card> getDeck() {
+ /** public List<Card> getDeck() {
     return deck;
   }
 
@@ -86,6 +93,6 @@ public class Player {
   public List<Card> getHand() {
     return hand;
   }
-
+*/
 
 }
