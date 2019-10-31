@@ -4,8 +4,30 @@ import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
+import edu.cnm.deepdive.dominionservice.model.pojo.Deck;
+import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Methods {
+
+  /** DECK METHODS*/
+  public Deck shuffle (Deck shuffleDeck){
+    Collections.shuffle(shuffleDeck.getDeckCards());
+    return shuffleDeck;
+  }
+  //shuffling when you have to put your discards back into the deck
+  public Deck shuffle(Deck shuffleDeck, DiscardPile discardPile){
+    ArrayList<Card> combinedDeckList = new ArrayList<>();
+    combinedDeckList.addAll(shuffleDeck.getDeckCards());
+    for (Card card: discardPile.getDiscardCards()){
+      //DAO CARD UPDATE LOCATION IDs TO SHOW THEY ARE IN DECK NOW
+    }
+    combinedDeckList.addAll((discardPile.getDiscardCards()));
+    Collections.shuffle(combinedDeckList);
+    return new Deck(combinedDeckList);
+  }
 
 
   /**CARD METHODS*/
@@ -14,6 +36,7 @@ public class Methods {
     card.setLocation(newLocation);
     return card;
   }
+
 
   /** Player methods */
   public Card draw(Location fromWhere, Player player, Location toWhere){

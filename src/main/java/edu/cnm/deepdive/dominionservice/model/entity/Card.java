@@ -53,6 +53,11 @@ public class Card {
   @Column(updatable = false)
   private String cardName;
 
+  public void doAction(Card card){
+    //do nothing- overridden by enum below
+  }
+
+
   public void setLocation(Location location) {
     this.location = location;
   }
@@ -88,6 +93,7 @@ public class Card {
   }
   public enum CardCategory {
     Bronze,
+
     Silver,
     Gold,
     Estate,
