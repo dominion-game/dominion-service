@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice;
 
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
@@ -11,6 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Methods {
+
+  /** Game Methods*/
+  public void deal(Game game);
 
   /** DECK METHODS*/
   public Deck shuffle (Deck shuffleDeck){
@@ -35,6 +39,9 @@ public class Methods {
     //DAO UPDATE LOCATION METHOD
     card.setLocation(newLocation);
     return card;
+  }
+  public void doAction(Card card){
+
   }
 
 

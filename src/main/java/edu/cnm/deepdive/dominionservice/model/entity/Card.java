@@ -13,16 +13,17 @@ import org.springframework.lang.NonNull;
 public class Card {
 
   private Card(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost){
+      CardCategory cardCategory, int cost) {
     this.cardName = cardName;
     this.cardType = cardType;
     this.cost = cost;
     this.id = id;
     this.location = location;
   }
+
   //Static factory method to make card
   public Card newCard(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost){
+      CardCategory cardCategory, int cost) {
     return new Card(cardName, location, cardType, cardCategory, cost);
   }
 
@@ -43,7 +44,7 @@ public class Card {
    */
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name="location_id", nullable = true, updatable = false)
+  @JoinColumn(name = "location_id", nullable = true, updatable = false)
   private Location location;
 
   /***
@@ -53,7 +54,7 @@ public class Card {
   @Column(updatable = false)
   private String cardName;
 
-  public void doAction(Card card){
+  public void doAction(Card card) {
     //do nothing- overridden by enum below
   }
 
@@ -85,15 +86,15 @@ public class Card {
   @NonNull
   private CardType cardType;
 
-  public enum CardType{
+  public enum CardType {
     MONEY,
-  ACTION,
-  VICTORY;
+    ACTION,
+    VICTORY;
 
   }
+
   public enum CardCategory {
     Bronze,
-
     Silver,
     Gold,
     Estate,
@@ -108,10 +109,6 @@ public class Card {
     Militia,
     Market,
     Mine,
-    Merchant,
-    Trash;
-
-
-
-
+    Merchant;
+  }
 }
