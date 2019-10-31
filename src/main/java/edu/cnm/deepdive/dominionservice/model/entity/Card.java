@@ -16,6 +16,8 @@ public class Card {
       CardCategory cardCategory, int cost) {
     this.cardName = cardName;
     this.cardType = cardType;
+    //TODO: simplify constructor. Can put info (cost, for example) into enum or get from
+    //DAO repository.
     this.cost = cost;
     this.id = id;
     this.location = location;

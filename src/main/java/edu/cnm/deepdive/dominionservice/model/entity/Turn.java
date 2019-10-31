@@ -105,10 +105,4 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
-  public enum TurnState{
-    ACTION_PHASE,
-    BUY_PHASE,
-    DISCARD_PHASE,
-    DRAW_PHASE;
-  }
 }

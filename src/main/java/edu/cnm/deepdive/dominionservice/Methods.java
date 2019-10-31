@@ -3,12 +3,10 @@ package edu.cnm.deepdive.dominionservice;
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
-import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.pojo.Deck;
 import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
-import edu.cnm.deepdive.dominionservice.service.TurnState;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -52,21 +50,21 @@ public class Methods {
       case Market:
         //TODO make this draw work
         player.draw();
-        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
-        updatedTurn.setBuysRemaining(1+ updatedTurn.getBuysRemaining());
+        addAction(updatedTurn, 1);
+        addBuys(updatedTurn,1);
         break;
       case Merchant:
         break;
       case Moat:
         break;
       case Cellar:
-        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
+        addAction(updatedTurn, 1);
         //TODO: Set player state to "DISCARDING"
         break;
       case Village:
         //TODO make this draw work
         player.draw();
-        updatedTurn.setActionsRemaining(2+ updatedTurn.getActionsRemaining());
+        addAction(updatedTurn, 2);
         break;
       case Workshop:
         player.drawFromStack(4);
@@ -89,6 +87,14 @@ public class Methods {
     return updatedTurn;
   }
 
+  private void addBuys(Turn updatedTurn, int howMany) {
+    updatedTurn.setBuysRemaining(howMany + updatedTurn.getBuysRemaining());
+  }
+
+  private void addAction(Turn updatedTurn, int howMany) {
+    updatedTurn.setActionsRemaining(howMany + updatedTurn.getActionsRemaining());
+  }
+
 
   /** Player methods */
   public Card draw(Location fromWhere, Player player, Location toWhere){
@@ -98,7 +104,7 @@ public class Methods {
   }
 
   /** Location methods */
- 
 
-  
+
+
 }

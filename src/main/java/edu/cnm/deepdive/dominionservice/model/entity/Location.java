@@ -49,16 +49,17 @@ public class Location {
   @ManyToOne
   @JoinColumn(nullable = true, updatable = false)
   private int stackId;
-  
+  private boolean hasCards;
+
   public boolean hasCards(Location fromWhere){
     //this will get the length of the arraylist in a locations object (cards). Probably won't work
     //until we put this method in the location class.
-    if(cards.size==0){
-      return false;
+    if(cards.size()==0){
+      hasCards= false;
     }else{
-      return true;
+      hasCards = true;
     }
-
+  return hasCards;
   }
   public Card getTopCard(Location fromWhere){
     //gets the top card from a deck, discard, or stack. Will always return the same card for stacks, but

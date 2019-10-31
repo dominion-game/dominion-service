@@ -1,8 +1,11 @@
 package edu.cnm.deepdive.dominionservice.controller;
 
-import edu.cnm.deepdive.dominionservice.model.entity.Player;
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
+import edu.cnm.deepdive.dominionservice.service.GameGenerator;
+import edu.cnm.deepdive.dominionservice.service.TurnGenerator;
 import java.util.NoSuchElementException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +16,27 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/player")
-@ExposesResourceFor(Player.class)
-public class PlayerController {
+@RequestMapping("/game")
+@ExposesResourceFor(Game.class)
+public class GameController {
 
+  private final GameGenerator generator;
+  private final GameRepository gameRepository;
 
+  @Autowired
+  public GameController(GameGenerator generator,
+      GameRepository gameRepository) {
+    this.generator = generator;
+    this.gameRepository = gameRepository;
+  }
+  @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
+  public Game newGame() {
+    return gameRespository.getGame();
+  }
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public Game getWinner(){
+    //Return finalized game. Calculate winner. Return victory data.
+  }
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Iterable<Turn> getAll() {
     return turnRepository.getAllByOrderByKeyAsc();
@@ -32,5 +51,3 @@ public class PlayerController {
   public void badRequest() {}
 
 }
-
-

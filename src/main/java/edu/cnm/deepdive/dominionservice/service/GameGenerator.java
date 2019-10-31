@@ -1,5 +1,5 @@
 package edu.cnm.deepdive.dominionservice.service;
 
-public class TurnState {
+public interface GameGenerator {
 
 }
