@@ -19,7 +19,6 @@ public class Methods {
 
   /** DECK METHODS*/
   public Deck shuffle (Deck shuffleDeck){
-    Collections.shuffle(shuffleDeck.getDeckCards());
     return shuffleDeck;
   }
   //shuffling when you have to put your discards back into the deck
