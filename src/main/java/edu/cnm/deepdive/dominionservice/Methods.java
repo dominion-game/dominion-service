@@ -41,7 +41,7 @@ public class Methods {
     card.setLocation(newLocation);
     return card;
   }
-  public Turn doAction(Card card, Turn turn, Player player){
+  public Turn doAction(Card card, Turn turn, Player player, Action A){
     Turn updatedTurn = new Turn(turn.getId(),turn.getPlayer(),turn.getBuysRemaining(),
         turn.getActionsRemaining());
     //TODO call cost method
