@@ -27,6 +27,14 @@ import org.springframework.lang.NonNull;
 @Entity
 @Table
 public class Turn {
+
+  public Turn(Long id, Player player, int buysRemaining, int actionsRemaining){
+    this.id = id;
+    this.player=player;
+    this.buysRemaining=buysRemaining;
+    this.actionsRemaining=actionsRemaining;
+  }
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "turn_id", updatable = false, nullable = false)
@@ -97,5 +105,10 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
-
+  public enum TurnState{
+    ACTION_PHASE,
+    BUY_PHASE,
+    DISCARD_PHASE,
+    DRAW_PHASE;
+  }
 }

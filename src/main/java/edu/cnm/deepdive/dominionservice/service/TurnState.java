@@ -1,5 +1,5 @@
 package edu.cnm.deepdive.dominionservice.service;
 
-public class State {
+public class TurnState {
 
 }

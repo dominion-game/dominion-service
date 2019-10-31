@@ -37,6 +37,10 @@ public class Player {
   @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
   private List<Location> locations = new LinkedList<>();
 
+  @Column
+  private PlayerState playerState;
+
+
   /**@OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
   private List<Card> deck = new LinkedList<>();
 
@@ -50,11 +54,45 @@ public class Player {
     this.playerScore = playerScore;
   }
 
-  public void setWhoseTurn(long whoseTurn) {
-    this.whoseTurn = (int) whoseTurn;
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
- /** public void setDeck(List<Card> deck) {
+  public void setGame(Game game) {
+    this.game = game;
+  }
+
+  public void setWhoseTurn(int whoseTurn) {
+    this.whoseTurn = whoseTurn;
+  }
+
+  public List<Turn> getTurns() {
+    return turns;
+  }
+
+  public void setTurns(List<Turn> turns) {
+    this.turns = turns;
+  }
+
+  public List<Location> getLocations() {
+    return locations;
+  }
+
+  public void setLocations(
+      List<Location> locations) {
+    this.locations = locations;
+  }
+
+  public PlayerState getPlayerState() {
+    return playerState;
+  }
+
+  public void setPlayerState(PlayerState playerState) {
+    this.playerState = playerState;
+  }
+
+  /** public void setDeck(List<Card> deck) {
     this.deck = deck;
   }
 
@@ -95,4 +133,14 @@ public class Player {
   }
 */
 
+ public enum PlayerState{
+   MY_TURN,
+   WATCHING,
+   MILITIA_RESPONSE,
+   ACTION;
+ }
+
+  public static class Hand {
+
+  }
 }

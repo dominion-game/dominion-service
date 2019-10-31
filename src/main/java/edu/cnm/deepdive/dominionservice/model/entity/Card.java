@@ -58,6 +58,13 @@ public class Card {
     //do nothing- overridden by enum below
   }
 
+  @NonNull
+  @Column(updatable=false)
+  private CardCategory cardCategory;
+
+  public CardCategory getCardCategory() {
+    return cardCategory;
+  }
 
   public void setLocation(Location location) {
     this.location = location;
@@ -82,6 +89,7 @@ public class Card {
   public CardType getCardType() {
     return cardType;
   }
+
 
   @NonNull
   private CardType cardType;

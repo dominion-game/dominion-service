@@ -5,10 +5,11 @@ import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
+import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.pojo.Deck;
 import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
+import edu.cnm.deepdive.dominionservice.service.TurnState;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Methods {
@@ -40,8 +41,52 @@ public class Methods {
     card.setLocation(newLocation);
     return card;
   }
-  public void doAction(Card card){
+  public Turn doAction(Card card, Turn turn, Player player){
+    Turn updatedTurn = new Turn(turn.getId(),turn.getPlayer(),turn.getBuysRemaining(),
+        turn.getActionsRemaining());
+    //TODO call cost method
+    switch(card.getCardCategory()){
+      case Mine:
 
+        break;
+      case Market:
+        //TODO make this draw work
+        player.draw();
+        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
+        updatedTurn.setBuysRemaining(1+ updatedTurn.getBuysRemaining());
+        break;
+      case Merchant:
+        break;
+      case Moat:
+        break;
+      case Cellar:
+        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
+        //TODO: Set player state to "DISCARDING"
+        break;
+      case Village:
+        //TODO make this draw work
+        player.draw();
+        updatedTurn.setActionsRemaining(2+ updatedTurn.getActionsRemaining());
+        break;
+      case Workshop:
+        player.drawFromStack(4);
+        break;
+      case Smithy:
+        break;
+      case Remodel:
+        //TODO: set player state to "TRASHING"
+        //Get cost from trashed card and add 2
+        player.drawFromStack(trashCost+2);
+        break;
+      case Militia:
+        break;
+      default:
+        //return invalid operation
+        break;
+    }
+    //TODO make this discard method work
+    card.discard();
+    return updatedTurn;
   }
 
 
