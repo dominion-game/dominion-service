@@ -5,6 +5,7 @@ package edu.cnm.deepdive.dominionservice.model.entity;
  * locations for the id in Card that says "where is"
  */
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -48,6 +49,48 @@ public class Location {
   @ManyToOne
   @JoinColumn(nullable = true, updatable = false)
   private int stackId;
+
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public List<Card> getCards() {
+    return cards;
+  }
+
+  public void setCards(List<Card> cards) {
+    this.cards = cards;
+  }
+
+  public Player getPlayer() {
+    return player;
+  }
+
+  public void setPlayer(Player player) {
+    this.player = player;
+  }
+
+  public LocationType getLocationType() {
+    return locationType;
+  }
+
+  public void setLocationType(
+      LocationType locationType) {
+    this.locationType = locationType;
+  }
+
+  public int getStackId() {
+    return stackId;
+  }
+
+  public void setStackId(int stackId) {
+    this.stackId = stackId;
+  }
 
   public enum LocationType{
     STACK,

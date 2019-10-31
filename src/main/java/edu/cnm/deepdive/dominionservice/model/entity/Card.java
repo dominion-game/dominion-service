@@ -11,6 +11,21 @@ import org.springframework.lang.NonNull;
 
 @Entity
 public class Card {
+
+  private Card(String cardName, Location location, CardType cardType,
+      CardCategory cardCategory, int cost){
+    this.cardName = cardName;
+    this.cardType = cardType;
+    this.cost = cost;
+    this.id = id;
+    this.location = location;
+  }
+  //Static factory method to make card
+  public Card newCard(String cardName, Location location, CardType cardType,
+      CardCategory cardCategory, int cost){
+    return new Card(cardName, location, cardType, cardCategory, cost);
+  }
+
   @Id
   @GeneratedValue
   @Column(name = "card_id", updatable = false, nullable = false)
@@ -71,7 +86,24 @@ public class Card {
   VICTORY;
 
   }
-
+  public enum CardCategory {
+    Bronze,
+    Silver,
+    Gold,
+    Estate,
+    Duchy,
+    Province,
+    Cellar,
+    Moat,
+    Village,
+    Workshop,
+    Smithy,
+    Remodel,
+    Militia,
+    Market,
+    Mine,
+    Merchant,
+    Trash;
 
 
 
