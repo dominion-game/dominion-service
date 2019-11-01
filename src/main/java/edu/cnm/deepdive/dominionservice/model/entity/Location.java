@@ -53,13 +53,14 @@ public class Location {
   public boolean hasCards(Location fromWhere){
     //this will get the length of the arraylist in a locations object (cards). Probably won't work
     //until we put this method in the location class.
-    if(cards.size==0){
+    if(cards.size()==0){
       return false;
     }else{
       return true;
     }
 
   }
+  /*
   public Card getTopCard(Location fromWhere){
     //gets the top card from a deck, discard, or stack. Will always return the same card for stacks, but
     //decks and discards will be different
@@ -79,6 +80,8 @@ public class Location {
     }
 
   }
+
+   */
 
   public Long getId() {
     return id;

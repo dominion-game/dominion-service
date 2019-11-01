@@ -58,7 +58,7 @@ public class Player {
    * LinkedList<>();
    */
   @Column
-  private PlayerState playerState;
+  private PlayerState playerState;//== new ??
 
 
   /**@OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
