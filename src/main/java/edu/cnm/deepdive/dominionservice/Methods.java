@@ -9,12 +9,16 @@ import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.pojo.Deck;
 import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
 import edu.cnm.deepdive.dominionservice.service.TurnState;
+import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Methods {
 
   /** Game Methods*/
+ public int numPlayers() {
+
+ }
   public void deal(Game game);
 
   /** DECK METHODS*/
@@ -35,6 +39,7 @@ public class Methods {
 
 
   /**CARD METHODS*/
+
   public Card changeLocation(Card card, Location newLocation){
     //DAO UPDATE LOCATION METHOD
     card.setLocation(newLocation);
@@ -127,4 +132,126 @@ public class Methods {
     }
 
   }
+
+  "ERICA"
+
+ /** Card Methods: */
+  Card type;
+  int numLeft;
+
+  public CardStack(Card type, int numLeft) {
+    this.type = type;
+    this.numLeft = numLeft;
+  }
+  public boolean isEmpty() {
+    return numLeft == 0;
+  }
+  @Override
+  public String toString() {
+    return "There are " + numLeft + " " + type + "s left";
+  }
+  @Override
+  public int compareTo(CardStack other) {
+    return type.compareTo(other.type);
+  }
+  public void setupStartingDeck() {
+    for(int i = 0; i < Card.startingHand.length; i++) {
+      deck.push(Card.startingHand[i]);
+    }
+    Collections.shuffle(deck);
+  }
+
+  public void drawCards(int numCards) {
+    for(int i = 0; i < numCards; i++) drawCard();
+  }
+
+  public Card getTopCard() {
+    if(deck.isEmpty()) {
+      deck.addAll(discard);
+      discard.clear();
+      Collections.shuffle(deck);
+      //notify all players that you had to shuffle
+      sendShuffled();
+    }
+    if(!deck.isEmpty()) { //i.e. there was something in discard
+      return deck.pop();
+    }
+    return null;
+  }
+  public void drawCard() {
+    Card c = getTopCard();
+    if(c != null) {
+      nextTurn.inHand.add(c);
+      sendCardToHand(c);
+    }
+  }
+
+  public Card getCardFromStack(Card card)
+  {
+    CardStack cardStack = getCardStack(card);
+    if(!cardStack.isEmpty()) {
+      cardStack.numLeft--;
+      return card;
+    }
+    return null;
+  }
+
+  public CardStack getCardStack(Card card) {
+//			System.out.println("Server: Searching supply for: " + card + " with upperLimit " + upperLimit);
+    for(CardStack cardStack: Game.this.stacks) {
+//				System.out.println("Server: Looking at stack " + cardStack);
+      if(cardStack.type.equals(card)) {
+//					System.out.println("Server: found match in stack " + cardStack);
+        return cardStack;
+      }
+    }
+    return null;
+  }
+
+  public void trashCard(Card c) {
+    trash.add(c);
+  }
+
+  //assumes caller has already removed it from appropriate place
+  public void discardCard(Card c) {
+    discard.add(c);
+  }
+
+  public void discardCards(List<Card> l) {
+    discard.addAll(l);
+  }
+  public void discardDeck() {
+    discard.addAll(deck);
+    deck.clear();
+  }
+
+  public void cleanup() {
+    discard.addAll(nextTurn.inPlay);
+    discard.addAll(nextTurn.inHand);
+//			nextTurn.inHand.clear();
+    sendEndTurn();
+    nextTurn = new ServerTurn(this);
+    nextTurn.drawCards(5);
+    Game.this.nextPlayer();
+    //TODO: Outpost?
+  }
+
+  private void sendCardToHand(Card c) {
+    RemoteMessage rm = new RemoteMessage(Action.addCardToHand, playerNum, c, null);
+    System.out.println("Server: sending card to player " + rm);
+    //TODO send to everyone that you got a card
+    streams.sendMessage(rm);
+  }
+
+  /** CardTypeAction method */
+
+
+
+
+
+  /** Game Methods: */
+
+
 }
+
+

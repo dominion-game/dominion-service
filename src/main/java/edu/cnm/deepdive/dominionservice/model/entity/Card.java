@@ -12,8 +12,7 @@ import org.springframework.lang.NonNull;
 @Entity
 public class Card {
 
-  private Card(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost) {
+  private Card(String cardName, Location location, CardType cardType, int cost) {
     this.cardName = cardName;
     this.cardType = cardType;
     this.cost = cost;
@@ -22,9 +21,8 @@ public class Card {
   }
 
   //Static factory method to make card
-  public Card newCard(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost) {
-    return new Card(cardName, location, cardType, cardCategory, cost);
+  public Card newCard(String cardName, Location location, CardType cardType, int cost) {
+    return new Card(cardName, location, cardType, cost);
   }
 
   @Id
@@ -60,11 +58,6 @@ public class Card {
 
   @NonNull
   @Column(updatable=false)
-  private CardCategory cardCategory;
-
-  public CardCategory getCardCategory() {
-    return cardCategory;
-  }
 
   public void setLocation(Location location) {
     this.location = location;
@@ -94,29 +87,23 @@ public class Card {
   @NonNull
   private CardType cardType;
 
+
   public enum CardType {
-    MONEY,
-    ACTION,
-    VICTORY;
-
-  }
-
-  public enum CardCategory {
-    Bronze,
-    Silver,
-    Gold,
-    Estate,
-    Duchy,
-    Province,
-    Cellar,
-    Moat,
-    Village,
-    Workshop,
-    Smithy,
-    Remodel,
-    Militia,
-    Market,
-    Mine,
-    Merchant;
+    moneyCardCopper,
+    moneyCardSilver,
+    moneyCardGold,
+    victoryCardEstate,
+    victoryCardDuchy,
+    victoryCardProvince,
+    actionCardCellar,
+    actionCardMoat,
+    actionCardVillage,
+    actionCardWorkshop,
+    actionCardSmithy,
+    actionCardRemodel,
+    actionCardMilitia,
+    actionCardMarket,
+    actionCardMine,
+    actionCardMerchant
   }
 }
