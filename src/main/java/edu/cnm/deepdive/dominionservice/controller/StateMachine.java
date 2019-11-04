@@ -1,4 +1,5 @@
 package edu.cnm.deepdive.dominionservice.controller;
+
 public class StateMachine {
 
   public StateMachine<States, Events> buildMachine() throws Exception {

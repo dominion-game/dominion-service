@@ -1,6 +1,5 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 /**
- *
  * May not be necessary. Mainly meant to provide a joint table including both Stack and Player
  * locations for the id in Card that says "where is"
  */
@@ -23,17 +22,18 @@ import org.springframework.lang.NonNull;
 @Entity
 @Table
 public class Location {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "location_id", updatable = false, nullable = false)
   private Long id;
 
-  @OneToMany(mappedBy="card",cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
   List<Card> cards = new LinkedList<>();
 
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name="player_id", nullable = true, updatable = false)
+  @JoinColumn(name = "player_id", nullable = true, updatable = false)
   private Player player;
 
   /**
@@ -41,7 +41,7 @@ public class Location {
    * card resides in. Values are "Stack", "Deck", "Discard", and "Hand", and these correspond to
    * playerId and stackId to allow for locating the card.
    */
-  @Column(name="location_type")
+  @Column(name = "location_type")
   private LocationType locationType;
 
   @NonNull
@@ -50,17 +50,18 @@ public class Location {
   private int stackId;
   private boolean hasCards;
 
-  public boolean hasCards(Location fromWhere){
+  public boolean hasCards(Location fromWhere) {
     //this will get the length of the arraylist in a locations object (cards). Probably won't work
     //until we put this method in the location class.
-    if(cards.size()==0){
-      hasCards= false;
-    }else{
+    if (cards.size() == 0) {
+      hasCards = false;
+    } else {
       hasCards = true;
     }
-  return hasCards;
+    return hasCards;
   }
-  public Card getTopCard(Location fromWhere){
+
+  public Card getTopCard(Location fromWhere) {
     //gets the top card from a deck, discard, or stack. Will always return the same card for stacks, but
     //decks and discards will be different
     LocationType type = fromWhere.getLocationType();
@@ -121,7 +122,7 @@ public class Location {
     this.stackId = stackId;
   }
 
-  public enum LocationType{
+  public enum LocationType {
     STACK,
     HAND,
     DISCARD,

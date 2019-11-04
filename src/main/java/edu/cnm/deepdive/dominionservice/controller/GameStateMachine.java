@@ -40,14 +40,17 @@ public class GameStateMachine extends StateMachineConfigurerAdapter<GameStates, 
       StateMachineTransitionConfigurer<GameStates, GameEvents> transitions)
       throws Exception {
 
-
     transitions.withExternal()
-        .source(GameStates.NOT_PLAYING).target(GameStates.GAME_START).event(GameEvents.GAME_INTIALIZED).and()
+        .source(GameStates.NOT_PLAYING).target(GameStates.GAME_START)
+        .event(GameEvents.GAME_INTIALIZED).and()
         .withExternal()
-        .source(GameStates.GAME_START).target(GameStates.IN_PROGRESS).event(GameEvents.GAME_STARTS).and()
+        .source(GameStates.GAME_START).target(GameStates.IN_PROGRESS).event(GameEvents.GAME_STARTS)
+        .and()
         .withExternal()
-        .source(GameStates.IN_PROGRESS).target(GameStates.GAME_END).event(GameEvents.GAME_FINISHES).and()
+        .source(GameStates.IN_PROGRESS).target(GameStates.GAME_END).event(GameEvents.GAME_FINISHES)
+        .and()
         .withExternal()
-        .source(GameStates.GAME_END).target(GameStates.NOT_PLAYING).event(GameEvents.RETURN_TO_LOBBY);
+        .source(GameStates.GAME_END).target(GameStates.NOT_PLAYING)
+        .event(GameEvents.RETURN_TO_LOBBY);
   }
 }

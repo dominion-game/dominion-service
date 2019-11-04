@@ -28,14 +28,17 @@ public class GameController {
     this.generator = generator;
     this.gameRepository = gameRepository;
   }
-  @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Game newGame() {
     return gameRespository.getGame();
   }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Game getWinner(){
+  public Game getWinner() {
     //Return finalized game. Calculate winner. Return victory data.
   }
+
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Iterable<Turn> getAll() {
     return turnRepository.getAllByOrderByKeyAsc();
@@ -43,10 +46,12 @@ public class GameController {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoSuchElementException.class)
-  public void notFound() {}
+  public void notFound() {
+  }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(Exception.class)
-  public void badRequest() {}
+  public void badRequest() {
+  }
 
 }

@@ -25,11 +25,13 @@ public class PlayerController {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoSuchElementException.class)
-  public void notFound() {}
+  public void notFound() {
+  }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(Exception.class)
-  public void badRequest() {}
+  public void badRequest() {
+  }
 
 }
 

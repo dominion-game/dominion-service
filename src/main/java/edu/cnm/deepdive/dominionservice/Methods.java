@@ -12,19 +12,24 @@ import java.util.Collections;
 
 public class Methods {
 
-  /** Game Methods*/
+  /**
+   * Game Methods
+   */
   public void deal(Game game);
 
-  /** DECK METHODS*/
-  public Deck shuffle (Deck shuffleDeck){
+  /**
+   * DECK METHODS
+   */
+  public Deck shuffle(Deck shuffleDeck) {
     Collections.shuffle(shuffleDeck.getDeckCards());
     return shuffleDeck;
   }
+
   //shuffling when you have to put your discards back into the deck
-  public Deck shuffle(Deck shuffleDeck, DiscardPile discardPile){
+  public Deck shuffle(Deck shuffleDeck, DiscardPile discardPile) {
     ArrayList<Card> combinedDeckList = new ArrayList<>();
     combinedDeckList.addAll(shuffleDeck.getDeckCards());
-    for (Card card: discardPile.getDiscardCards()){
+    for (Card card : discardPile.getDiscardCards()) {
       //DAO CARD UPDATE LOCATION IDs TO SHOW THEY ARE IN DECK NOW
     }
     combinedDeckList.addAll((discardPile.getDiscardCards()));
@@ -33,17 +38,20 @@ public class Methods {
   }
 
 
-  /**CARD METHODS*/
-  public Card changeLocation(Card card, Location newLocation){
+  /**
+   * CARD METHODS
+   */
+  public Card changeLocation(Card card, Location newLocation) {
     //DAO UPDATE LOCATION METHOD
     card.setLocation(newLocation);
     return card;
   }
-  public Turn doAction(Card card, Turn turn, Player player, Action A){
-    Turn updatedTurn = new Turn(turn.getId(),turn.getPlayer(),turn.getBuysRemaining(),
+
+  public Turn doAction(Card card, Turn turn, Player player, Action A) {
+    Turn updatedTurn = new Turn(turn.getId(), turn.getPlayer(), turn.getBuysRemaining(),
         turn.getActionsRemaining());
     //TODO call cost method
-    switch(card.getCardCategory()){
+    switch (card.getCardCategory()) {
       case Mine:
 
         break;
@@ -51,7 +59,7 @@ public class Methods {
         //TODO make this draw work
         player.draw();
         addAction(updatedTurn, 1);
-        addBuys(updatedTurn,1);
+        addBuys(updatedTurn, 1);
         break;
       case Merchant:
         break;
@@ -74,7 +82,7 @@ public class Methods {
       case Remodel:
         //TODO: set player state to "TRASHING"
         //Get cost from trashed card and add 2
-        player.drawFromStack(trashCost+2);
+        player.drawFromStack(trashCost + 2);
         break;
       case Militia:
         break;
@@ -96,15 +104,16 @@ public class Methods {
   }
 
 
-  /** Player methods */
-  public Card draw(Location fromWhere, Player player, Location toWhere){
+  /**
+   * Player methods
+   */
+  public Card draw(Location fromWhere, Player player, Location toWhere) {
     //Return a new card from a stack, deck, or other
     card.changeLocation(toWhere);
     return card;
   }
 
   /** Location methods */
-
 
 
 }

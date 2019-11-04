@@ -31,18 +31,18 @@ public class TurnController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Turn getTurnStatus(){
+  public Turn getTurnStatus() {
     return turnRepository.getCurrentTurnStatus();
   }
 
-  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces =MediaType.APPLICATION_JSON_VALUE)
-  public Turn takeAction(){
+  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public Turn takeAction() {
     //TODO update current turn with action taken.
     return turnRepository.getCurrentTurnStatus();
   }
 
   @PostMapping()
-  public Turn startTurn(){
+  public Turn startTurn() {
     //TODO: creates a new turn when player starts
     return turnRepository.getCurrentTurnStatus();
   }
@@ -55,11 +55,13 @@ public class TurnController {
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoSuchElementException.class)
-  public void notFound() {}
+  public void notFound() {
+  }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(Exception.class)
-  public void badRequest() {}
+  public void badRequest() {
+  }
 
 }
 

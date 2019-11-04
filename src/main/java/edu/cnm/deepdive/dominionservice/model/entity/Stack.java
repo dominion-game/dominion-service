@@ -20,7 +20,7 @@ import org.springframework.lang.NonNull;
 @Entity
 @Table(
     indexes = {@Index(columnList = "stackType"),
-    @Index(columnList = "stackCount")}
+        @Index(columnList = "stackCount")}
 )
 public class Stack {
 
@@ -35,26 +35,24 @@ public class Stack {
 
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name="game_id", nullable = false, updatable = false)
+  @JoinColumn(name = "game_id", nullable = false, updatable = false)
   private Game game;
 
   /**
-   *  The variable that holds the stack type. Allowed types are: Bronze, Silver, Gold, Estate, Duchy,
-   *  Province, Cellar, Moat, Village, Workshop, Smithy, Remodel, Militia, Market, Mine, Merchant,
-   *  Trash.
-   *
+   * The variable that holds the stack type. Allowed types are: Bronze, Silver, Gold, Estate, Duchy,
+   * Province, Cellar, Moat, Village, Workshop, Smithy, Remodel, Militia, Market, Mine, Merchant,
+   * Trash.
    */
-  @Column(name="stack_type")
+  @Column(name = "stack_type")
   private StackType stackType;
 
   /**
    * The number of stacks with one or more cards.
    */
-  @Column(name="stack_count")
+  @Column(name = "stack_count")
   private int stackCount;
 
-
- // private List<Stack> stacks;
+  // private List<Stack> stacks;
 
   /**
    * Gets id.
@@ -132,20 +130,22 @@ public class Stack {
     Merchant,
     Trash;
 
-    String [] symbols = {"Bronze", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Moat", "Village",
-    "Workshop", "Smithy", "Remodel", "Militia", "Market", "Mine", "Merchant", "Trash"};
+    String[] symbols = {"Bronze", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Moat",
+        "Village",
+        "Workshop", "Smithy", "Remodel", "Militia", "Market", "Mine", "Merchant", "Trash"};
 
     public String toString(StackType stackType) {
       return stackType.getSymbol();
-   }
-   private String getSymbol(){
+    }
+
+    private String getSymbol() {
       return symbols[ordinal()];
-   }
+    }
   }
 
   /**public static void main(String[] args) {
-    System.out.println(StackType.Merchant.toString());
-  }
-*/
+   System.out.println(StackType.Merchant.toString());
+   }
+   */
 }
 

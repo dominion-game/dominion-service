@@ -61,7 +61,7 @@ public class Card {
   }
 
   @NonNull
-  @Column(updatable=false)
+  @Column(updatable = false)
   private CardCategory cardCategory;
 
   public CardCategory getCardCategory() {

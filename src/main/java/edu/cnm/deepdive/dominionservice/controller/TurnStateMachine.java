@@ -46,7 +46,8 @@ public class TurnStateMachine extends StateMachineConfigurerAdapter<TurnStates, 
         .withExternal()
         .source(TurnStates.BUYING).target(TurnStates.DISCARDING).event(TurnEvents.END_BUYS).and()
         .withExternal()
-        .source(TurnStates.DISCARDING).target(TurnStates.DRAWING).event(TurnEvents.END_DISCARD).and()
+        .source(TurnStates.DISCARDING).target(TurnStates.DRAWING).event(TurnEvents.END_DISCARD)
+        .and()
         .withExternal()
         .source(TurnStates.DRAWING).target(TurnStates.PASSIVE).event(TurnEvents.END_DRAW);
   }
