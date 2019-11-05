@@ -1,6 +1,5 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
-import edu.cnm.deepdive.dominionservice.model.CardType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -53,11 +52,11 @@ public class Card {
   @Column(updatable = false)
   private String cardName;
 
-  public void doAction(Card card) {
+  public void doAction(Turn turn) {
     //do nothing- overridden by enum below
   }
-
-  public void play(Player player) {
+/**
+  public Turn play(Player player, Turn turn) {
     switch (this.cardType) {
       //only care about action cards. ignore money and victory
       case cellar:
@@ -109,8 +108,9 @@ public class Card {
         //do nothing (money or victory)
     }
 
+    return turn;
   }
-
+*/
   @NonNull
   @Column(updatable = false)
 
@@ -142,6 +142,113 @@ public class Card {
   @NonNull
   private CardType cardType;
 
+  public void discard() {
+  }
+
+  public Turn play(Player currentPlayer, Turn turn) {
+  }
+
+  public enum CardType {
+
+    COPPER{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    SILVER{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    GOLD{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    ESTATE{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    DUCHY{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    PROVINCE{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    CELLAR{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    MOAT{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    VILLAGE{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    WORKSHOP{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    SMITHY{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    REMODEL{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    MILITIA{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    MARKET{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    MINE{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    },
+    MERCHANT{
+      @Override
+      public Turn play(Player player, Turn turn) {
+        return null;
+      }
+    };
+
+    public abstract Turn play(Player player, Turn turn);
+  }
 }
 
 

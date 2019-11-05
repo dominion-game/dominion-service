@@ -85,6 +85,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
     PLAYER_1,
     PLAYER_2
   }
+
   //LOGGING FOR THE TIME BEING, WILL PROBABLY BE UNNCESSARY IN PRODUCTION
   @Bean
   public StateMachineListener<States, Events> listener(){

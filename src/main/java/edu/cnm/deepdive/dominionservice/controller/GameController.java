@@ -47,7 +47,7 @@ public class GameController {
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")
   public Game createNewGame(@RequestBody Game newGame) {
-    Game game = gameService.createNewGame(playerService.getUser(), newGame);
+    Game game = gameService.createNewGame(playerService.getUser(), gameRepository);
     httpSession.setAttribute("gameId", game.getId());
     logger.info("new game id# " + httpSession.getAttribute("gameId")+" stored in session");
     return game;

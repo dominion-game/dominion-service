@@ -16,4 +16,6 @@ public class PlayerService {
   public void listPlayers() {
   }
 
+  public Player getUser() {
+  }
 }

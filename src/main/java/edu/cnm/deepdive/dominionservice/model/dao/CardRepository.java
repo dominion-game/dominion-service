@@ -18,4 +18,6 @@ public interface CardRepository extends CrudRepository<Card,Long> {
 
   @Override
   void deleteAll();
+
+  Card getCardById(long cardId);
 }

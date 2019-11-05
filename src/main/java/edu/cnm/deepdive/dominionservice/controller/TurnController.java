@@ -90,7 +90,6 @@ public class TurnController {
     return currentTurn.getTurnState();
   }
 
-
   @PostMapping("/turn/new")
   public ResponseEntity<Turn> startTurn(@RequestBody Turn newTurn, Player player) {
     gameLogic.startTurn(player);
