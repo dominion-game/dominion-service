@@ -1,3 +1,4 @@
+/**
 package edu.cnm.deepdive.dominionservice;
 
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
@@ -12,14 +13,8 @@ import java.util.Collections;
 
 public class Methods {
 
-  /**
-   * Game Methods
-   */
   public void deal(Game game);
 
-  /**
-   * DECK METHODS
-   */
   public Deck shuffle(Deck shuffleDeck) {
     Collections.shuffle(shuffleDeck.getDeckCards());
     return shuffleDeck;
@@ -37,10 +32,6 @@ public class Methods {
     return new Deck(combinedDeckList);
   }
 
-
-  /**
-   * CARD METHODS
-   */
   public Card changeLocation(Card card, Location newLocation) {
     //DAO UPDATE LOCATION METHOD
     card.setLocation(newLocation);
@@ -95,25 +86,7 @@ public class Methods {
     return updatedTurn;
   }
 
-  private void addBuys(Turn updatedTurn, int howMany) {
-    updatedTurn.setBuysRemaining(howMany + updatedTurn.getBuysRemaining());
-  }
 
-  private void addAction(Turn updatedTurn, int howMany) {
-    updatedTurn.setActionsRemaining(howMany + updatedTurn.getActionsRemaining());
-  }
+*/
 
 
-  /**
-   * Player methods
-   */
-  public Card draw(Location fromWhere, Player player, Location toWhere) {
-    //Return a new card from a stack, deck, or other
-    card.changeLocation(toWhere);
-    return card;
-  }
-
-  /** Location methods */
-
-
-}

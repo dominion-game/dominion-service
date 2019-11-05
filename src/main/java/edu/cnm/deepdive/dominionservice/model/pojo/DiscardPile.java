@@ -16,7 +16,9 @@ public class DiscardPile {
   public DiscardPile(ArrayList<Card> deckCards, ArrayList<Card> otherCards) {
 
   }
-
+  public void addToDiscard(ArrayList<Card> cards){
+    discardCards.addAll(cards);
+  }
 
   public ArrayList<Card> getDiscardCards() {
     return discardCards;

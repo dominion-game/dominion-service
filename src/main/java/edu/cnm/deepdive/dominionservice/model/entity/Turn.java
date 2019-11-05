@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,11 +49,13 @@ public class Turn {
   @JoinColumn(name = "player_id", nullable = false, updatable = false)
   private Player player;
 
+  @Column
+  private int buyingPower;
+
   /**
    * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is
    * triggered to move to the next phase (discard).
    */
-  @NonNull
   @Column(name = "buys")
   private int buysRemaining;
 
@@ -59,7 +63,6 @@ public class Turn {
    * Actions Remaining- a counter that iterates down to zero. When it returns zero, a method is
    * triggered to move to the next phase (buy).
    */
-  @NonNull
   @Column(name = "actions")
   private int actionsRemaining;
 
@@ -74,6 +77,16 @@ public class Turn {
     return plays;
   }
 
+  @Enumerated(EnumType.STRING)
+  private TurnState turnState;
+
+  public TurnState getTurnState() {
+    return turnState;
+  }
+
+  public void setTurnState(TurnState turnState) {
+    this.turnState = turnState;
+  }
 
   public Long getId() {
     return id;
@@ -104,4 +117,25 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
+
+  public int getBuyingPower() {
+    return buyingPower;
+  }
+
+  public void setBuyingPower(int buyingPower) {
+    this.buyingPower = buyingPower;
+  }
+
+  public void setPlays(List<Play> plays) {
+    this.plays = plays;
+  }
+
+  public enum TurnState {
+    ACTING,
+    BUYING,
+    DISCARDING,
+    DRAWING,
+    PASSIVE,
+    MILITIA;
+  }
 }
