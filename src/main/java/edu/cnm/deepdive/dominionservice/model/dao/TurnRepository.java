@@ -17,4 +17,8 @@ public interface TurnRepository extends CrudRepository<Turn,Long> {
   TurnState getTurnState(Long id);
 
   Iterable<Turn> getAllByOrderByKeyAsc();
+
+  TurnState getCurrentTurnState();
+
+  Turn getCurrentTurn();
 }

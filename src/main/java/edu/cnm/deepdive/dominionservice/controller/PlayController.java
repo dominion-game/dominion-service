@@ -41,8 +41,10 @@ public class PlayController {
   Logger logger = LoggerFactory.getLogger(PlayController.class);
 
   //TODO implement play class
-  @PostMapping("/play")
-  public Turn makePlay(){
+  @PostMapping("/play/card/{id}")
+  public Turn playCard(){
 
   }
+  @PostMapping()
+  public Turn
 }

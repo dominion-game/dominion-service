@@ -4,7 +4,9 @@ import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import java.util.ArrayList;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Deck {
   private Location location;
   private ArrayList<Card> deckCards;

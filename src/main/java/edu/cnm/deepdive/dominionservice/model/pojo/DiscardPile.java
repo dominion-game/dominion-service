@@ -2,7 +2,9 @@ package edu.cnm.deepdive.dominionservice.model.pojo;
 
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import java.util.ArrayList;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DiscardPile {
 
   private ArrayList<Card> discardCards;
@@ -18,6 +20,18 @@ public class DiscardPile {
   }
   public void addToDiscard(ArrayList<Card> cards){
     discardCards.addAll(cards);
+  }
+
+  public void discardCard(Card c) {
+    discard.add(c);
+  }
+
+  public void discardCards(List<Card> l) {
+    discard.addAll(l);
+  }
+  public void discardDeck() {
+    discard.addAll(deck);
+    deck.clear();
   }
 
   public ArrayList<Card> getDiscardCards() {

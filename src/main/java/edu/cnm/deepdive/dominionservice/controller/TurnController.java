@@ -2,8 +2,10 @@ package edu.cnm.deepdive.dominionservice.controller;
 
 import edu.cnm.deepdive.dominionservice.model.dao.TurnRepository;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
+import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn.TurnState;
+import edu.cnm.deepdive.dominionservice.service.GameLogic;
 import edu.cnm.deepdive.dominionservice.service.GameService;
 import edu.cnm.deepdive.dominionservice.service.PlayerService;
 import edu.cnm.deepdive.dominionservice.service.TurnService;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,6 +48,9 @@ public class TurnController {
   @Autowired
   TurnService turnService;
 
+  @Autowired
+  GameLogic gameLogic;
+
   Logger logger = LoggerFactory.getLogger(TurnController.class);
 
 
@@ -53,21 +59,29 @@ public class TurnController {
     this.turnRepository = turnRepository;
   }
 
-  @PutMapping("/turn/endphase/{key}")
-  public TurnState endTurnPhase(@PathVariable TurnState endingState){
-    //TODO end the current turn state, send message to state machine, and move to next state
+  @PutMapping("/turn/endphase/{id}")
+  public TurnState endTurnPhase(@RequestParam int endThisStateId){
+
+    //Key: 1 = Action phase, 2 = Buy Phase. Ending Discard and draw calls the "end turn" mapping instead.
+    switch(endThisStateId){
+      case 1:
+        gameLogic.endActions();
+        break;
+      case 2:
+        gameLogic.endBuys();
+        break;
+    }
+    return turnRepository.getCurrentTurnState();
   }
 
   @PutMapping("/turn/endturn")
   public void endTurn(){
-    //TODO end the current turn state, send message to state machine, and move to next state
+    gameLogic.endTurn();
   }
-
 
   @GetMapping("/turn/{id}")
   public Turn getCurrentTurn(@PathVariable long turnId) {
-    Turn currentTurn = turnRepository.findTurnById(turnId);
-    return currentTurn;
+    return turnRepository.getCurrentTurn();
   }
 
   @GetMapping("/turn/{id}/state")
@@ -78,17 +92,9 @@ public class TurnController {
 
 
   @PostMapping("/turn/new")
-  public ResponseEntity<Turn> startTurn(@RequestBody Turn newTurn) {
-    Long gameId = (Long) httpSession.getAttribute("gameId");
-    logger.info("move to insert:" + createMoveDTO.getBoardColumn() + createMoveDTO.getBoardRow());
-    Turn turn = turnService.createTurn(gameService.getGame(gameId), playerService.getLoggedUser(), createMoveDTO);
-    Game game = gameService.getGameById(gameId);
-    gameService.updateGameStatus(gameService.getGame(gameId), moveService.checkCurrentGameStatus(game));
-    return move;
-    //TODO: creates a new turn when player starts
-    //TODO: notify state machine to change state
+  public ResponseEntity<Turn> startTurn(@RequestBody Turn newTurn, Player player) {
+    gameLogic.startTurn(player);
     turnRepository.save(newTurn);
-    turn.setTurnState(TurnState.ACTING);
   }
 
   @GetMapping(//TODO ADD PARAMETERS)
