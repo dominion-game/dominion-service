@@ -63,14 +63,29 @@ public class Card {
       case cellar:
         player.drawCard();
         break;
+      case market:
+        player.drawCard();
+        player.addAction();
+        player.addBuy();
+        player.addGold();
+        break;
+      case merchant:
+        player.drawCard();
+        player.addAction();
+        //TODO add gold when playing silver
+        break;
+      case militia:
+        player.addGold();
+        player.addGold();
+        //TODO each other player discards down to 3 cards
+        break;
+      case mine:
+        break;
       case moat:
         player.drawCard();
         player.drawCard();
         break;
-      case village:
-        player.drawCard();
-        break;
-      case workshop:
+      case remodel:
         break;
       case smithy:
         //player draws 3 cards
@@ -78,18 +93,18 @@ public class Card {
         player.drawCard();
         player.drawCard();
         break;
-      case remodel:
-        break;
-      case militia:
-        break;
-      case market:
+      case village:
         player.drawCard();
+        player.addAction();
+        player.addAction();
         break;
-      case mine:
+      case workshop:
         break;
-      case merchant:
-        player.drawCard();
-        break;
+
+
+
+
+
       default:
         //do nothing (money or victory)
     }

@@ -38,6 +38,8 @@ public class Player {
 
   private int numBuy;
 
+  private int extraGold;
+
   private List<Card> playerHand;
 
   @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
@@ -239,6 +241,27 @@ public class Player {
     checkDrawPile();
     Card newCard = drawPile.remove(0);
     hand.add(newCard);
+  }
+
+  public void addAction(){
+    numAction++;
+  }
+
+  public void addBuy(){
+    numBuy++;
+  }
+
+  public void addGold(){
+    extraGold++;
+  }
+
+  public void playMilitia(){
+    //TODO tell game to switch states, to all engage all players.
+    // other players discard down to 3 or play Moat
+  }
+
+  public void reactToMilitia(){
+    //TODO other players discard down to 3 or play Moat
   }
 
 }
