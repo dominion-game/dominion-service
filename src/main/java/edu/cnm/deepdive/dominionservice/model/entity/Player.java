@@ -60,16 +60,19 @@ public class Player {
   @Column
   private PlayerState playerState;
 
-
-  /**@OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
+  //This is a list of ALL cards (drawPile, hand and discard)
+  @OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
   private List<Card> deck = new LinkedList<>();
+
+  @OneToMany(mappedBy= "drawPile", cascade = CascadeType.ALL)
+  private List<Card> drawPile = new LinkedList<>();
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Card> discard = new LinkedList<>();
 
   @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
   private List<Card> hand = new LinkedList<>();
-*/
+
   public void setPlayerScore(int playerScore) {
     this.playerScore = playerScore;
   }
@@ -80,7 +83,7 @@ public class Player {
    * @param whoseTurn the whose turn
    */
   public void setWhoseTurn(long whoseTurn) {
-    this.whoseTurn = (int) whoseTurn;
+    this.whoseTurn = (int) whoseTurn;}
 
   public void setId(Long id) {
     this.id = id;
@@ -213,7 +216,29 @@ public class Player {
    ACTION;
  }
 
-  public static class Hand {
-
+//  public static class Hand {
+//
+//  }
+  private void shuffleDrawPile(){
+    //TODO
   }
+  private void checkDrawPile(){
+    if (drawPile.size() ==0){
+      //add discard to draw (remove cards from discard, add to drawPile)
+      while (discard.size() > 0){
+        drawPile.add(discard.remove(0));
+      }
+      shuffleDrawPile();
+    }
+  }
+
+  public void drawCard(){
+    //takes a card from the players drawPile and adds to hand
+    //first remove a card from the drawPile
+    //first make sure we have something to draw
+    checkDrawPile();
+    Card newCard = drawPile.remove(0);
+    hand.add(newCard);
+  }
+
 }

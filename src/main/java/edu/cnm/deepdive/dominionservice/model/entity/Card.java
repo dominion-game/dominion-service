@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import edu.cnm.deepdive.dominionservice.model.CardType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,8 +57,47 @@ public class Card {
     //do nothing- overridden by enum below
   }
 
+  public void play(Player player) {
+    switch (this.cardType) {
+      //only care about action cards. ignore money and victory
+      case cellar:
+        player.drawCard();
+        break;
+      case moat:
+        player.drawCard();
+        player.drawCard();
+        break;
+      case village:
+        player.drawCard();
+        break;
+      case workshop:
+        break;
+      case smithy:
+        //player draws 3 cards
+        player.drawCard();
+        player.drawCard();
+        player.drawCard();
+        break;
+      case remodel:
+        break;
+      case militia:
+        break;
+      case market:
+        player.drawCard();
+        break;
+      case mine:
+        break;
+      case merchant:
+        player.drawCard();
+        break;
+      default:
+        //do nothing (money or victory)
+    }
+
+  }
+
   @NonNull
-  @Column(updatable=false)
+  @Column(updatable = false)
 
   public void setLocation(Location location) {
     this.location = location;
@@ -87,23 +127,6 @@ public class Card {
   @NonNull
   private CardType cardType;
 
-
-  public enum CardType {
-    moneyCardCopper,
-    moneyCardSilver,
-    moneyCardGold,
-    victoryCardEstate,
-    victoryCardDuchy,
-    victoryCardProvince,
-    actionCardCellar,
-    actionCardMoat,
-    actionCardVillage,
-    actionCardWorkshop,
-    actionCardSmithy,
-    actionCardRemodel,
-    actionCardMilitia,
-    actionCardMarket,
-    actionCardMine,
-    actionCardMerchant
-  }
 }
+
+
