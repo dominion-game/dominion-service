@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,20 +21,19 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.lang.NonNull;
 
 /**
- * Keeps a table consisting of every turn taken by both players,
- * Organized by a Turn ID and a Player ID. For example, Turn 1-Player 1
- * Is player 1's first turn, while Turn 1- Player 2 is Player 2's First Turn.
- * When HasFinished updates to True, the game's state resets for the next turn.
+ * Keeps a table consisting of every turn taken by both players, Organized by a Turn ID and a Player
+ * ID. For example, Turn 1-Player 1 Is player 1's first turn, while Turn 1- Player 2 is Player 2's
+ * First Turn. When HasFinished updates to True, the game's state resets for the next turn.
  */
 @Entity
 @Table
 public class Turn {
 
-  public Turn(Long id, Player player, int buysRemaining, int actionsRemaining){
+  public Turn(Long id, Player player, int buysRemaining, int actionsRemaining) {
     this.id = id;
-    this.player=player;
-    this.buysRemaining=buysRemaining;
-    this.actionsRemaining=actionsRemaining;
+    this.player = player;
+    this.buysRemaining = buysRemaining;
+    this.actionsRemaining = actionsRemaining;
   }
 
   @Id
@@ -44,30 +45,31 @@ public class Turn {
    * Foreign Key playerId, refers to the player who took this turn.
    */
   @NonNull
-  @ManyToOne (fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name="player_id", nullable = false, updatable = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name = "player_id", nullable = false, updatable = false)
   private Player player;
 
+  @Column
+  private int buyingPower;
+
   /**
-   * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is triggered
-   * to move to the next phase (discard).
+   * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is
+   * triggered to move to the next phase (discard).
    */
-  @NonNull
-  @Column(name="buys")
+  @Column(name = "buys")
   private int buysRemaining;
 
   /**
-   * Actions Remaining- a counter that iterates down to zero. When it returns zero, a method is triggered
-   * to move to the next phase (buy).
+   * Actions Remaining- a counter that iterates down to zero. When it returns zero, a method is
+   * triggered to move to the next phase (buy).
    */
-  @NonNull
-  @Column(name="actions")
+  @Column(name = "actions")
   private int actionsRemaining;
 
   /**
    * Includes a list of plays per turn.
    */
-  @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL,orphanRemoval = true)
+  @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("play_id ASC")
   private List<Play> plays = new LinkedList<>();
 
@@ -75,6 +77,16 @@ public class Turn {
     return plays;
   }
 
+  @Enumerated(EnumType.STRING)
+  private TurnState turnState;
+
+  public TurnState getTurnState() {
+    return turnState;
+  }
+
+  public void setTurnState(TurnState turnState) {
+    this.turnState = turnState;
+  }
 
   public Long getId() {
     return id;
@@ -105,10 +117,25 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
-  public enum TurnState{
-    ACTION_PHASE,
-    BUY_PHASE,
-    DISCARD_PHASE,
-    DRAW_PHASE;
+
+  public int getBuyingPower() {
+    return buyingPower;
+  }
+
+  public void setBuyingPower(int buyingPower) {
+    this.buyingPower = buyingPower;
+  }
+
+  public void setPlays(List<Play> plays) {
+    this.plays = plays;
+  }
+
+  public enum TurnState {
+    ACTING,
+    BUYING,
+    DISCARDING,
+    DRAWING,
+    PASSIVE,
+    MILITIA;
   }
 }

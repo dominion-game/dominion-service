@@ -1,0 +1,29 @@
+package edu.cnm.deepdive.dominionservice.service;
+
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
+import edu.cnm.deepdive.dominionservice.model.entity.Player;
+import edu.cnm.deepdive.dominionservice.model.entity.Turn;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+@Service
+@Transactional
+public class TurnService {
+
+  public Turn createTurn(Game game, Player player, Turn turn) {
+
+  }
+
+  public Turn addBuys(Turn turn, int howMany) {
+    turn.setBuysRemaining(howMany + turn.getBuysRemaining());
+    return turn;
+  }
+
+  public Turn addAction(Turn turn, int howMany) {
+    turn.setActionsRemaining(howMany + turn.getActionsRemaining());
+    return turn;
+  }
+
+
+}

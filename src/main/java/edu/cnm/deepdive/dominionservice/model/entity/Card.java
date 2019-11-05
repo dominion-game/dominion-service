@@ -12,21 +12,6 @@ import org.springframework.lang.NonNull;
 @Entity
 public class Card {
 
-  private Card(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost) {
-    this.cardName = cardName;
-    this.cardType = cardType;
-    this.cost = cost;
-    this.id = id;
-    this.location = location;
-  }
-
-  //Static factory method to make card
-  public Card newCard(String cardName, Location location, CardType cardType,
-      CardCategory cardCategory, int cost) {
-    return new Card(cardName, location, cardType, cardCategory, cost);
-  }
-
   @Id
   @GeneratedValue
   @Column(name = "card_id", updatable = false, nullable = false)
@@ -44,7 +29,7 @@ public class Card {
    */
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name = "location_id", nullable = true, updatable = false)
+  @JoinColumn(name = "location_id", nullable = true, updatable = true)
   private Location location;
 
   /***
@@ -59,7 +44,7 @@ public class Card {
   }
 
   @NonNull
-  @Column(updatable=false)
+  @Column(updatable = false)
   private CardCategory cardCategory;
 
   public CardCategory getCardCategory() {

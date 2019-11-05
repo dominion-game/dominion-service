@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.dao;
 
+
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Card.CardCategory;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;

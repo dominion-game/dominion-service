@@ -11,11 +11,8 @@ import javax.persistence.OneToMany;
 
 
 /**
- * The game is responsible for the following:
- * creating a new game
- * keeping track of players
- * keep track of stacks
- * determining end of game
+ * The game is responsible for the following: creating a new game keeping track of players keep
+ * track of stacks determining end of game
  */
 @Entity
 public class Game {
@@ -33,13 +30,13 @@ public class Game {
    * will be updated throughout the game as players pull cards for the stacks.
    */
   @OneToMany(mappedBy = "stack", cascade = CascadeType.ALL)
-  private List<Stack> stacks= new LinkedList<>();
+  private List<Stack> stacks = new LinkedList<>();
 
   /**
    * Returns a list of Players. This allows for keeping track of players, turns, and points
    * throughout the game.
    */
-  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<Player> players = new LinkedList<>();
 
   /**
