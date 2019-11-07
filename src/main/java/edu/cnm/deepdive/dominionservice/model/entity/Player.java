@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -43,10 +44,10 @@ public class Player {
   private List<Card> playerHand;
 
   @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
-  private List<Turn> turns = new LinkedList<>();
+  private ArrayList<Turn> turns = new ArrayList<>();
 
   @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
-  private List<Location> locations = new LinkedList<>();
+  private ArrayList<Location> locations = new ArrayList<>();
 
   /**
    * Sets player score.
@@ -104,12 +105,12 @@ public class Player {
     this.turns = turns;
   }
 
-  public List<Location> getLocations() {
+  public ArrayList<Location> getLocations() {
     return locations;
   }
 
   public void setLocations(
-      List<Location> locations) {
+      ArrayList<Location> locations) {
     this.locations = locations;
   }
 

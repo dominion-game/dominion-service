@@ -59,38 +59,37 @@ public class TurnController {
     this.turnRepository = turnRepository;
   }
 
-  @PutMapping("/turn/endphase/{id}")
-  public TurnState endTurnPhase(@RequestParam int endThisStateId){
-
-    //Key: 1 = Action phase, 2 = Buy Phase. Ending Discard and draw calls the "end turn" mapping instead.
-    switch(endThisStateId){
-      case 1:
+  @PutMapping("endphase")
+  public TurnState endTurnPhase(){
+    //Ending Discard and draw calls the "end turn" mapping instead.
+    switch(turnRepository.getCurrentTurnState()){
+      case ACTING:
         gameLogic.endActions();
         break;
-      case 2:
+      case BUYING:
         gameLogic.endBuys();
         break;
     }
     return turnRepository.getCurrentTurnState();
   }
 
-  @PutMapping("/turn/endturn")
+  @PutMapping("/endturn")
   public void endTurn(){
     gameLogic.endTurn();
   }
 
-  @GetMapping("/turn/{id}")
+  @GetMapping("{id}")
   public Turn getCurrentTurn(@PathVariable long turnId) {
     return turnRepository.getCurrentTurn();
   }
 
-  @GetMapping("/turn/{id}/state")
+  @GetMapping("{id}/state")
   public TurnState getCurrentTurnState(@PathVariable long turnId) {
     Turn currentTurn = turnRepository.findTurnById(turnId);
     return currentTurn.getTurnState();
   }
 
-  @PostMapping("/turn/new")
+  @PostMapping("/new")
   public ResponseEntity<Turn> startTurn(@RequestBody Turn newTurn, Player player) {
     gameLogic.startTurn(player);
     turnRepository.save(newTurn);

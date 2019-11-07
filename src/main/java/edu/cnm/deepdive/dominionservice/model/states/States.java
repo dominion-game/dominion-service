@@ -10,5 +10,7 @@ public enum States {
   GAME_PLAYING,
   GAME_START,
   TURN,
-  GAME_END
+  GAME_END,
+  PLAYER_1_TURN,
+  PLAYER_2_TURN
 }

@@ -145,8 +145,6 @@ public class Card {
   public void discard() {
   }
 
-  public Turn play(Player currentPlayer, Turn turn) {
-  }
 
   public enum CardType {
 

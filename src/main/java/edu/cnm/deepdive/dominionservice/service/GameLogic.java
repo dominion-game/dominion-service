@@ -11,8 +11,9 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.annotation.WithStateMachine;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+@Component
 @WithStateMachine
 public class GameLogic {
   private Game game;
@@ -34,12 +35,42 @@ public class GameLogic {
         .sendEvent(Mono.just(message))
         .subscribe();
   }
-  public void endActions(){}
-  public void endBuys(){}
-  public void endTurn(){}
-  public void militiaAttack(){}
-  public void endMilitiaTurn(){}
-  public void endGame(){}
+  public void endActions(){
+    Message message = MessageBuilder.withPayload(Events.END_ACTIONS).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
+  public void endBuys(){
+    Message message = MessageBuilder.withPayload(Events.END_BUYS).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
+  public void endTurn(){
+    Message message = MessageBuilder.withPayload(Events.END_TURN).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
+  public void militiaAttack(){
+    Message message = MessageBuilder.withPayload(Events.MILITIA_ATTACK).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
+  public void endMilitiaTurn(){
+    Message message = MessageBuilder.withPayload(Events.END_MILITIA).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
+  public void endGame(){
+    Message message = MessageBuilder.withPayload(Events.BEGIN_TURN).build();
+    stateMachine
+        .sendEvent(Mono.just(message))
+        .subscribe();
+  }
 
 
   public static Player declareWinner(Game thisGame){

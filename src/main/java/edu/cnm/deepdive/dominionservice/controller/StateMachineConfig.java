@@ -53,8 +53,22 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .withStates()
          .parent(States.GAME_PLAYING)
           .initial(States.GAME_START)
-          .state(States.TURN)
-          .state(States.GAME_END);
+          .state(States.GAME_START)
+          .and()
+        .withStates()
+        .initial(States.GAME_START)
+        .state(States.GAME_START)
+        .and()
+        .withStates()
+        .parent(States.GAME_START)
+        .initial(States.GAME_START)
+        .state(States.GAME_PLAYING)
+        .and()
+        .withStates()
+        .parent(States.GAME_PLAYING)
+        .initial(States.PLAYER_1_TURN)
+        .state(States.PLAYER_1_TURN)
+        .state(States.PLAYER_2_TURN);
 
   }
 
@@ -77,7 +91,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .source(States.GAME_PLAYING).event(Events.END_ACTIONS)
         .and()
         .withInternal()
-        .source(States.GAME_PLAYING)
+        .source(States.GAME_PLAYING).event(Events.)
 
   }
   //TODO see if we can set this up on initialization of game

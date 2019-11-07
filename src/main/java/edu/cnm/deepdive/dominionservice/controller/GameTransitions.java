@@ -5,7 +5,7 @@ import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
 
 @WithStateMachine
-static class GameTransitions{
+class GameTransitions{
 
   @OnTransition(target = States.NOT_PLAYING)
   void toState1() {

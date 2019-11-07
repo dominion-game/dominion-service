@@ -47,11 +47,11 @@ public class PlayController {
 
   Logger logger = LoggerFactory.getLogger(PlayController.class);
 
-  @PostMapping("/play/card/{id}")
+  @PostMapping("/card/{id}")
   public Turn playCard(@PathVariable long cardId){
     Turn turn = turnRepository.getCurrentTurn();
     Player currentPlayer = turn.getPlayer();
-    Turn updatedTurn = cardRepository.getCardById(cardId).play(currentPlayer, turn);
+    Turn updatedTurn = cardRepository.getCardById(cardId).getCardType().play(currentPlayer, turn);
     cardRepository.getCardById(cardId).discard();
     return updatedTurn;
   }
