@@ -19,7 +19,9 @@ public class Methods {
  public int numPlayers() {
 
  }
-  public void deal(Game game);
+  public void deal(Game game){
+
+  }
 
   /** DECK METHODS*/
   public Deck shuffle (Deck shuffleDeck){
@@ -45,51 +47,53 @@ public class Methods {
     card.setLocation(newLocation);
     return card;
   }
-  public Turn doAction(Card card, Turn turn, Player player){
-    Turn updatedTurn = new Turn(turn.getId(),turn.getPlayer(),turn.getBuysRemaining(),
-        turn.getActionsRemaining());
-    //TODO call cost method
-    switch(card.getCardCategory()){
-      case Mine:
-
-        break;
-      case Market:
-        //TODO make this draw work
-        player.draw();
-        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
-        updatedTurn.setBuysRemaining(1+ updatedTurn.getBuysRemaining());
-        break;
-      case Merchant:
-        break;
-      case Moat:
-        break;
-      case Cellar:
-        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
-        //TODO: Set player state to "DISCARDING"
-        break;
-      case Village:
-        //TODO make this draw work
-        player.draw();
-        updatedTurn.setActionsRemaining(2+ updatedTurn.getActionsRemaining());
-        break;
-      case Workshop:
-        player.drawFromStack(4);
-        break;
-      case Smithy:
-        break;
-      case Remodel:
-        //TODO: set player state to "TRASHING"
-        //Get cost from trashed card and add 2
-        player.drawFromStack(trashCost+2);
-        break;
-      case Militia:
-        break;
-      default:
-        //return invalid operation
-        break;
-    }
+//  public Turn doAction(Card card, Turn turn, Player player){
+//    Turn updatedTurn = new Turn(turn.getId(),turn.getPlayer(),turn.getBuysRemaining(),
+//        turn.getActionsRemaining());
+//    //TODO call cost method
+//    switch(card.getCardCategory()){
+//      case Mine:
+//
+//        break;
+//      case Market:
+//        //TODO make this draw work
+//        player.draw();
+//        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
+//        updatedTurn.setBuysRemaining(1+ updatedTurn.getBuysRemaining());
+//        break;
+//      case Merchant:
+//        break;
+//      case Moat:
+//        break;
+//      case Cellar:
+//        updatedTurn.setActionsRemaining(1+ updatedTurn.getActionsRemaining());
+//        //TODO: Set player state to "DISCARDING"
+//        break;
+//      case Village:
+//        //TODO make this draw work
+//        player.draw();
+//        updatedTurn.setActionsRemaining(2+ updatedTurn.getActionsRemaining());
+//        break;
+//      case Workshop:
+//        player.drawFromStack(4);
+//        break;
+//      case Smithy:
+//        break;
+//      case Remodel:
+//        //TODO: set player state to "TRASHING"
+//        //Get cost from trashed card and add 2
+//        player.drawFromStack(trashCost+2);
+//        break;
+//      case Militia:
+//        break;
+//      default:
+//        //return invalid operation
+//        break;
+//    }
     //TODO make this discard method work
-    card.discard();
+
+  public Turn discard(Player player, Turn turn){
+  card.discard();
     return updatedTurn;
   }
 
@@ -208,18 +212,6 @@ public class Methods {
     return null;
   }
 
-  public void trashCard(Card c) {
-    trash.add(c);
-  }
-
-  //assumes caller has already removed it from appropriate place
-  public void discardCard(Card c) {
-    discard.add(c);
-  }
-
-  public void discardCards(List<Card> l) {
-    discard.addAll(l);
-  }
   public void discardDeck() {
     discard.addAll(deck);
     deck.clear();
@@ -235,21 +227,6 @@ public class Methods {
     Game.this.nextPlayer();
     //TODO: Outpost?
   }
-
-  private void sendCardToHand(Card c) {
-    RemoteMessage rm = new RemoteMessage(Action.addCardToHand, playerNum, c, null);
-    System.out.println("Server: sending card to player " + rm);
-    //TODO send to everyone that you got a card
-    streams.sendMessage(rm);
-  }
-
-  /** CardTypeAction method */
-
-
-
-
-
-  /** Game Methods: */
 
 
 }

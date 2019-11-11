@@ -18,6 +18,7 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 public class Player {
+
   @Id
   @GeneratedValue
   @Column(name = "player_id", updatable = false, nullable = false)
@@ -25,7 +26,7 @@ public class Player {
 
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name="game_id", nullable = false, updatable = false)
+  @JoinColumn(name = "game_id", nullable = false, updatable = false)
   private Game game;
 
   @Column
@@ -40,12 +41,14 @@ public class Player {
 
   private int extraGold;
 
+  private int extraGoldIfSilver;
+
   private List<Card> playerHand;
 
-  @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
+  @OneToMany(mappedBy = "turn", cascade = CascadeType.ALL)
   private List<Turn> turns = new LinkedList<>();
 
-  @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
+  @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
   private List<Location> locations = new LinkedList<>();
 
   /**
@@ -63,15 +66,22 @@ public class Player {
   private PlayerState playerState;
 
 
-  /**@OneToMany(mappedBy= "deck", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
   private List<Card> deck = new LinkedList<>();
 
-  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "drawPile", cascade = CascadeType.ALL)
+  private List<Card> drawPile = new LinkedList<>();
+
+  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<Card> discard = new LinkedList<>();
 
-  @OneToMany(mappedBy= "player", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
   private List<Card> hand = new LinkedList<>();
-*/
+
+  //may not need to know about trash (it would probably be easier)
+  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+  private List<Card> trash = new LinkedList<>();
+
   public void setPlayerScore(int playerScore) {
     this.playerScore = playerScore;
   }
@@ -82,7 +92,8 @@ public class Player {
    * @param whoseTurn the whose turn
    */
   public void setWhoseTurn(long whoseTurn) {
-    this.whoseTurn = (int) whoseTurn;}
+    this.whoseTurn = (int) whoseTurn;
+  }
 
   public void setId(Long id) {
     this.id = id;
@@ -121,18 +132,13 @@ public class Player {
     this.playerState = playerState;
   }
 
-  /** public void setDeck(List<Card> deck) {
-    this.deck = deck;
-  }
-
-  public void setDiscard(List<Card> discard) {
-    this.discard = discard;
-  }
-
-  public void setHand(List<Card> hand) {
-    this.hand = hand;
-  }
-*/
+  /**
+   * public void setDeck(List<Card> deck) { this.deck = deck; }
+   * <p>
+   * public void setDiscard(List<Card> discard) { this.discard = discard; }
+   * <p>
+   * public void setHand(List<Card> hand) { this.hand = hand; }
+   */
   public Long getId() {
     return id;
   }
@@ -208,30 +214,33 @@ public class Player {
   public void setPlayerHand(List<Card> playerHand) {
     this.playerHand = playerHand;
   }
- public enum PlayerState{
-   MY_TURN,
-   WATCHING,
-   MILITIA_RESPONSE,
-   ACTION;
- }
 
-//  public static class Hand {
+  public enum PlayerState {
+    MY_TURN,
+    WATCHING,
+    MILITIA_RESPONSE,
+    ACTION;
+  }
+
+  //  public static class Hand {
 //
 //  }
-  private void shuffleDrawPile(){
+  private void shuffleDrawPile() {
+
     //TODO
   }
-  private void checkDrawPile(){
-    if (drawPile.size() ==0){
+
+  private void checkDrawPile() {
+    if (drawPile.size() == 0) {
       //add discard to draw (remove cards from discard, add to drawPile)
-      while (discard.size() > 0){
+      while (discard.size() > 0) {
         drawPile.add(discard.remove(0));
       }
       shuffleDrawPile();
     }
   }
 
-  public void drawCard(){
+  public void drawCard() {
     //takes a card from the players drawPile and adds to hand
     //first remove a card from the drawPile
     //first make sure we have something to draw
@@ -239,26 +248,58 @@ public class Player {
     Card newCard = drawPile.remove(0);
     hand.add(newCard);
   }
-
-  public void addAction(){
+  public void addAction() {
     numAction++;
   }
 
-  public void addBuy(){
+  public void addBuy() {
     numBuy++;
   }
 
-  public void addGold(){
+  public void addGold() {
     extraGold++;
   }
 
-  public void playMilitia(){
+  public void addGold(int goldToAdd) {
+    extraGold+= goldToAdd;
+  }
+
+  public void addGoldIfSilver() {
+    extraGoldIfSilver++;
+  }
+
+
+  public void playMilitia() {
     //TODO tell game to switch states, to all engage all players.
     // other players discard down to 3 or play Moat
   }
 
-  public void reactToMilitia(){
+  public void reactToMilitia() {
     //TODO other players discard down to 3 or play Moat
+  }
+
+
+  public void trashCard(Card c) {
+    trash.add(c);
+  }
+
+  public void trashTreasure(Card treasure) {
+    trash.add(treasure);
+  }
+
+  public void getTreasure(){
+    //if()
+      //TODO implement this method
+  }
+
+
+  //assumes caller has already removed it from appropriate place
+  public void discardCard(Card c) {
+    discard.add(c);
+  }
+
+  public void discardCards(List<Card> l) {
+    discard.addAll(l);
   }
 
 }

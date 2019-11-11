@@ -3,6 +3,7 @@ package edu.cnm.deepdive.dominionservice.controller;
 import edu.cnm.deepdive.dominionservice.model.dao.PlayRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.TurnRepository;
 import edu.cnm.deepdive.dominionservice.model.entity.Play;
+import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.service.GameService;
 import edu.cnm.deepdive.dominionservice.service.PlayerService;
@@ -30,10 +31,10 @@ public class PlayController {
   HttpSession httpSession;
 
   @Autowired
-  private final PlayRepository playRepository;
+//  private final PlayRepository playRepository;
 
   @Autowired
-  private final TurnRepository turnRepository;
+//  private final TurnRepository turnRepository;
 
   @Autowired
   TurnService turnService;
@@ -45,6 +46,7 @@ public class PlayController {
   public Turn playCard(){
 
   }
-  @PostMapping()
+ // @PostMapping()
   public Turn
+
 }

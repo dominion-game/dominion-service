@@ -78,6 +78,7 @@ public class Location {
           break;
       }
     }
+    return getTopCard();
 
   }
 

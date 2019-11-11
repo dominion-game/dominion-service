@@ -18,7 +18,9 @@ public class Village extends Card {
 
   @Override
   public void doAction(Card card) {
-    super.doAction(card);
+    player.drawCard();
+    player.addAction();
+    player.addAction();
   }
 
   //THE GETTER AND SETTER HERE ARE PROBABLY NOT NECESSARY

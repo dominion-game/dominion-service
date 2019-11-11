@@ -18,7 +18,9 @@ public class Smithy extends Card {
 
   @Override
   public void doAction(Card card) {
-    super.doAction(card);
+    player.drawCard();
+    player.drawCard();
+    player.drawCard();
   }
 
   //THE GETTER AND SETTER HERE ARE PROBABLY NOT NECESSARY

@@ -18,7 +18,10 @@ public class Market extends Card {
 
   @Override
   public void doAction(Card card) {
-    super.doAction(card);
+    player.drawCard();
+    player.addAction();
+    player.addBuy();
+    player.addGold();
   }
 
   //THE GETTER AND SETTER HERE ARE PROBABLY NOT NECESSARY

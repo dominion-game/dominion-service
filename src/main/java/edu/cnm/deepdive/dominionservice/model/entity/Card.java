@@ -1,29 +1,24 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
-import edu.cnm.deepdive.dominionservice.model.CardType;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import org.springframework.lang.NonNull;
 
 @Entity
 public class Card {
 
-  private Card(String cardName, Location location, CardType cardType, int cost) {
+  private Card(String cardName, CardType cardType, int cost) {
     this.cardName = cardName;
     this.cardType = cardType;
     this.cost = cost;
-    this.id = id;
-    this.location = location;
   }
 
   //Static factory method to make card
-  public Card newCard(String cardName, Location location, CardType cardType, int cost) {
-    return new Card(cardName, location, cardType, cost);
+  public Card newCard(String cardName, CardType cardType, int cost) {
+    return new Card(cardName, cardType, cost);
   }
 
   @Id
@@ -38,13 +33,6 @@ public class Card {
   @Column(updatable = false)
   private int cost;
 
-  /***
-   * where card located
-   */
-  @NonNull
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name = "location_id", nullable = true, updatable = false)
-  private Location location;
 
   /***
    * name of card
@@ -57,77 +45,8 @@ public class Card {
     //do nothing- overridden by enum below
   }
 
-  public void play(Player player) {
-    switch (this.cardType) {
-      //only care about action cards. ignore money and victory
-      case cellar:
-        player.drawCard();
-        break;
-      case market:
-        player.drawCard();
-        player.addAction();
-        player.addBuy();
-        player.addGold();
-        break;
-      case merchant:
-        player.drawCard();
-        player.addAction();
-        //TODO add gold when playing silver
-        break;
-      case militia:
-        player.addGold();
-        player.addGold();
-        //TODO each other player discards down to 3 cards
-        break;
-      case mine:
-        break;
-      case moat:
-        player.drawCard();
-        player.drawCard();
-        break;
-      case remodel:
-        break;
-      case smithy:
-        //player draws 3 cards
-        player.drawCard();
-        player.drawCard();
-        player.drawCard();
-        break;
-      case village:
-        player.drawCard();
-        player.addAction();
-        player.addAction();
-        break;
-      case workshop:
-        break;
-
-
-
-
-
-      default:
-        //do nothing (money or victory)
-    }
-
-  }
-
-  @NonNull
-  @Column(updatable = false)
-
-  public void setLocation(Location location) {
-    this.location = location;
-  }
-
-  public int getId() {
-    return id;
-  }
-
   public int getCost() {
     return cost;
-  }
-
-  public Location getLocation() {
-    return location;
   }
 
   public String getCardName() {
@@ -142,6 +61,158 @@ public class Card {
   @NonNull
   private CardType cardType;
 
+  public enum CardType {
+    COPPER {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        playerInfo.addBuyingPower();
+      }
+    },
+    SILVER {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        playerInfo.addBuyingPower(3);
+      }
+    },
+    GOLD {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        playerInfo.addBuyingPower(6);
+      }
+    },
+    ESTATE {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        //Not an action or money card.Counts as points at end of game
+      }
+    },
+    DUCHY {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        //Not an action or money card.Counts as points at end of game
+
+      }
+    },
+    PROVINCE {
+      @Override
+      public void play(PlayerInfo playerInfo,
+          List<Card> additionalCards) {
+        //Not an action or money card.Counts as points at end of game
+      }
+    },
+
+    CELLAR {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        //discard any number of cards from hand, redraw that many cards
+        int numDiscarded = additionalCards.size();
+        for (int i = 0; i < numDiscarded; i++) {
+          playerInfo.discardCard(additionalCards.get(i));
+        }
+        for (int i = 0; i < numDiscarded ; i++) {
+          playerInfo.drawCard();
+        }
+        playerInfo.decrementActionsRemaining();
+      }
+    },
+    MOAT {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.drawCard();
+        playerInfo.drawCard();
+        playerInfo.decrementActionsRemaining();
+        //TODO Add functionality to respond to militia
+      }
+    },
+
+    MARKET {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.drawCard();
+        playerInfo.addAction();
+        playerInfo.addBuy();
+        playerInfo.addBuyingPower();
+        playerInfo.decrementActionsRemaining();
+      }
+    },
+
+    MERCHANT {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.drawCard();
+        playerInfo.addAction();
+        playerInfo.addGoldIfSilver();
+        playerInfo.decrementActionsRemaining();
+        //TODO add gold when playing silver
+
+      }
+    },
+    MILITIA {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.addBuyingPower();
+        playerInfo.addBuyingPower();
+        playerInfo.decrementActionsRemaining();
+        //TODO implement Militia method
+
+      }
+    },
+    MINE {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        //TODO make sure additional cards has a card in it (how to hand error state)
+        playerInfo.trashCard(additionalCards.get(0));
+        playerInfo.getTreasure();
+        playerInfo.decrementActionsRemaining();
+        //TODO Gain a Treasure to your hand costing up to 3 more than it
+      }
+    },
+
+    REMODEL {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        //TODO make sure additional cards has a card in it (how to hand error state)
+        playerInfo.trashCard(additionalCards.get(0));
+        playerInfo.decrementActionsRemaining();
+        //TODO Gain a card costing up to 2 more gold than the one you trashed.
+
+      }
+    },
+
+    SMITHY {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.drawCard();
+        playerInfo.drawCard();
+        playerInfo.drawCard();
+        playerInfo.decrementActionsRemaining();
+
+      }
+    },
+
+    VILLAGE {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.drawCard();
+        playerInfo.addAction();
+        playerInfo.addAction();
+        playerInfo.decrementActionsRemaining();
+
+      }
+    },
+    WORKSHOP {
+      @Override
+      public void play(PlayerInfo playerInfo, List<Card> additionalCards) {
+        playerInfo.decrementActionsRemaining();
+        //TODO Gain card costing up to 4 gold
+      }
+    };
+
+    public abstract void play(PlayerInfo playerInfo, List<Card> additionalCards);
+  }
 }
-
-
