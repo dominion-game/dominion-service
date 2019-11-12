@@ -2,6 +2,7 @@ package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.pojo.DrawPile;
+import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -206,10 +207,11 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo, List<Card> additionalCards) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining();
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()-1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining+2);
-        playerInfo.decrementActionsRemaining();
+
 
       }
     },

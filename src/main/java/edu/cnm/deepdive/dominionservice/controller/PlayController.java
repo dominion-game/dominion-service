@@ -37,7 +37,7 @@ public class PlayController {
 
   Logger logger = LoggerFactory.getLogger(PlayController.class);
 
-   @PostMapping("/card/{id}")
+   @PostMapping("/card/play/{id}")
   public GameStateInfo playCard(@PathVariable int cardId, long gameId, int playerId){
      return gameLogic.playCard(cardId, gameId, playerId);
   }

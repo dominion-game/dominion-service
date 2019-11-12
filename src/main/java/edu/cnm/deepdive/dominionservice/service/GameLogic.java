@@ -45,13 +45,13 @@ public class GameLogic {
   public GameStateInfo playCard(int cardId, long gameId, int playerId) {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
-    GameStateInfo updatedGameState = playingCard.getCardType().play(gameStateInfo, playerId);
-    if(updatedGameState.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
+    playingCard.getCardType().play(gameStateInfo, playerId);
+    if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
       endActions();
-      updatedGameState.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
+      gameStateInfo.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
     }
     gameStateInfo.saveAll();
-    return updatedGameState;
+    return gameStateInfo;
   }
 
   public GameStateInfo playerEndsPhase(GameStateInfo currentGameState) {
