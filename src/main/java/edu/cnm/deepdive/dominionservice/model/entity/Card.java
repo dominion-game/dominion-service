@@ -117,7 +117,7 @@ public class Card {
         }
         for (int i = 0; i < numDiscarded; i++) {
           DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-          Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+          Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
           gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
         }
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
@@ -129,12 +129,13 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
+
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
       }
@@ -144,7 +145,7 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
@@ -164,13 +165,13 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
 
-        gameStateInfo.addGoldIfSilver();
+        gameStateInfo.getCurrentPlayerStateInfo().getTurn().addGoldIfSilver();
         //TODO add gold when playing silver
 
       }
@@ -218,15 +219,15 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
-        DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
-        DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
@@ -238,7 +239,7 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawpile);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
         gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;

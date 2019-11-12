@@ -11,6 +11,7 @@ import edu.cnm.deepdive.dominionservice.model.entity.Stack.StackType;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.enums.StackTypes;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
+import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.List;
@@ -114,4 +115,8 @@ public class GameStateInfo implements Serializable {
   public void saveAll() {
     //call repository save methods
   }
+   public void currentPlayerDraws(){
+     getCurrentPlayer().drawCard();
+  }
+
 }
