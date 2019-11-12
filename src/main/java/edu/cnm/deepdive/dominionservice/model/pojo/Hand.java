@@ -27,8 +27,17 @@ public class Hand {
   public Hand newHand(Location location) {
     return new Hand(cardRepository.getAllByLocationId(location));
   }
+
+
   public List<Card> draw(DrawPile drawPile, GameStateInfo gameStateInfo){
-    drawPile.getTopCard(gameStateInfo);
+    cardsInHand.add(drawPile.getTopCard(gameStateInfo));
+    return cardsInHand;
+  }
+
+  public List<Card> draw(DrawPile drawPile, GameStateInfo gameStateInfo, int numOfCards){
+    for (int i = 0; i < numOfCards; i++) {
+      draw(drawPile, gameStateInfo);
+    }
     return cardsInHand;
   }
 
