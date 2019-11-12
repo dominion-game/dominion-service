@@ -1,18 +1,15 @@
-package edu.cnm.deepdive.dominionservice.controller;
+package edu.cnm.deepdive.dominionservice.controller.state;
 
-import edu.cnm.deepdive.dominionservice.model.states.Events;
-import edu.cnm.deepdive.dominionservice.model.states.States;
+import edu.cnm.deepdive.dominionservice.model.enums.Events;
+import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.EnumSet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.config.EnableStateMachine;

@@ -6,10 +6,9 @@ import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
-import edu.cnm.deepdive.dominionservice.model.pojo.Deck;
+import edu.cnm.deepdive.dominionservice.model.pojo.DrawPile;
 import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
 import edu.cnm.deepdive.dominionservice.service.TurnState;
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,21 +20,7 @@ public class Methods {
  }
   public void deal(Game game);
 
-  /** DECK METHODS*/
-  public Deck shuffle (Deck shuffleDeck){
-    return shuffleDeck;
-  }
-  //shuffling when you have to put your discards back into the deck
-  public Deck shuffle(Deck shuffleDeck, DiscardPile discardPile){
-    ArrayList<Card> combinedDeckList = new ArrayList<>();
-    combinedDeckList.addAll(shuffleDeck.getDeckCards());
-    for (Card card: discardPile.getDiscardCards()){
-      //DAO CARD UPDATE LOCATION IDs TO SHOW THEY ARE IN DECK NOW
-    }
-    combinedDeckList.addAll((discardPile.getDiscardCards()));
-    Collections.shuffle(combinedDeckList);
-    return new Deck(combinedDeckList);
-  }
+  /** DECK METHODS*
 
 
   /**CARD METHODS*/
@@ -102,25 +87,7 @@ public class Methods {
   }
 
   /** Location methods */
-  public Card getTopCard(Location fromWhere){
-    //gets the top card from a deck, discard, or stack. Will always return the same card for stacks, but
-    //decks and discards will be different
-    LocationType type = fromWhere.getLocationType();
-    if (fromWhere.hasCards) {
-      switch (type) {
-        case STACK:
-          break;
-        case DECK:
-          break;
-        case DISCARD:
-          break;
-        default:
-          //return invalid action error
-          break;
-      }
-    }
 
-  }
 
   public boolean hasCards(Location fromWhere){
     //this will get the length of the arraylist in a locations object (cards). Probably won't work
@@ -165,18 +132,7 @@ public class Methods {
     for(int i = 0; i < numCards; i++) drawCard();
   }
 
-  public Card getTopCard() {
-    if(deck.isEmpty()) {
-      deck.addAll(discard);
-      discard.clear();
-      Collections.shuffle(deck);
-      //notify all players that you had to shuffle
-      sendShuffled();
-    }
-    if(!deck.isEmpty()) { //i.e. there was something in discard
-      return deck.pop();
-    }
-    return null;
+
   }
   public void drawCard() {
     Card c = getTopCard();
@@ -225,23 +181,8 @@ public class Methods {
     deck.clear();
   }
 
-  public void cleanup() {
-    discard.addAll(nextTurn.inPlay);
-    discard.addAll(nextTurn.inHand);
-//			nextTurn.inHand.clear();
-    sendEndTurn();
-    nextTurn = new ServerTurn(this);
-    nextTurn.drawCards(5);
-    Game.this.nextPlayer();
-    //TODO: Outpost?
-  }
 
-  private void sendCardToHand(Card c) {
-    RemoteMessage rm = new RemoteMessage(Action.addCardToHand, playerNum, c, null);
-    System.out.println("Server: sending card to player " + rm);
-    //TODO send to everyone that you got a card
-    streams.sendMessage(rm);
-  }
+
 
   /** CardTypeAction method */
 

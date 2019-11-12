@@ -26,13 +26,7 @@ public class DiscardPile {
     discard.add(c);
   }
 
-  public void discardCards(List<Card> l) {
-    discard.addAll(l);
-  }
-  public void discardDeck() {
-    discard.addAll(deck);
-    deck.clear();
-  }
+
 
   public ArrayList<Card> getDiscardCards() {
     return discardCards;

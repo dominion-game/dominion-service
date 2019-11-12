@@ -5,10 +5,13 @@ import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Hand {
 
-  private static CardRepository cardRepository;
+
   @Autowired
   private CardRepository cardRepository;
 
@@ -19,7 +22,8 @@ public class Hand {
   }
 
 
-  public static Hand newHand(Location location) {
+  public Hand newHand(Location location) {
     return new Hand(cardRepository.getAllByLocationId(location));
   }
+
 }

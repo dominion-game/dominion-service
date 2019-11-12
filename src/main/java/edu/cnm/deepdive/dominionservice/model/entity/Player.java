@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,6 +215,9 @@ public class Player {
    WATCHING,
    MILITIA_RESPONSE,
    ACTION;
+
+   public DiscardPile getDiscardPile() {
+   }
  }
 
 //  public static class Hand {

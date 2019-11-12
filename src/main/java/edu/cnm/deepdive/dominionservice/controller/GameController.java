@@ -1,10 +1,9 @@
 package edu.cnm.deepdive.dominionservice.controller;
 
 import edu.cnm.deepdive.dominionservice.model.dao.GameRepository;
+import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
-import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.service.GameService;
-import edu.cnm.deepdive.dominionservice.service.PlayerService;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -46,18 +45,13 @@ public class GameController {
 
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")
-  public Game createNewGame(@RequestBody Game newGame) {
+  public GameStateInfo createNewGame(@RequestBody Game newGame) {
     Game game = gameService.createNewGame(playerService.getUser(), gameRepository);
     httpSession.setAttribute("gameId", game.getId());
     logger.info("new game id# " + httpSession.getAttribute("gameId")+" stored in session");
     return game;
   }
 
-
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Game getWinner() {
-    //Return finalized game. Calculate winner. Return victory data.
-  }
 
   @GetMapping(value = "/{id")
   public Game getGameinfo(@PathVariable long id){

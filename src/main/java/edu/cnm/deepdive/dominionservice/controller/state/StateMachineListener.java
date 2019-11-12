@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.dominionservice.controller;
+package edu.cnm.deepdive.dominionservice.controller.state;
 
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
