@@ -1,5 +1,4 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
-package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.pojo.DrawPile;

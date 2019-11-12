@@ -15,6 +15,7 @@ import edu.cnm.deepdive.dominionservice.model.enums.States;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.event.EventType;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -71,6 +72,13 @@ public class GameLogic {
     gameStateInfo.saveAll();
     return currentGameState;
   }
+  void signalMachine(Events event) {
+    Message<Events> message = MessageBuilder
+        .withPayload(event)
+        .setHeader("Event Transition", event.toString())
+        .build();
+    stateMachine.sendEvent(message);
+  }
 
   public GameStateInfo initGame(Game game){
     GameStateInfo gameStateInfo = new GameStateInfo(game);
@@ -90,28 +98,22 @@ public class GameLogic {
     gameStateInfo.saveAll();
     return gameStateInfo;
   }
-
-  public GameStateInfo endGame(){
-    endGame();
-
-  }
   //METHODS
 
   public void startGame(){
-    stateMachine
-        .sendEvent().subscribe();
+    signalMachine(Events.BEGIN_GAME);
   }
+
   public void startTurn(Player player){
-    Message message = MessageBuilder.withPayload(Events.BEGIN_TURN).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
+    if (player.getId() == 1) {
+      signalMachine(Events.PLAYER_1_START);
+    }else{
+      signalMachine(Events.PLAYER_2_START);
+    }
   }
-  public void endDiscarding(){
-    Message message = MessageBuilder.withPayload(Events.END_ACTIONS).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
+
+  public void endDiscarding(Player player){
+
   }
   public void endActions(){
     Message message = MessageBuilder.withPayload(Events.END_ACTIONS).build();
@@ -126,39 +128,19 @@ public class GameLogic {
         .subscribe();
   }
   public void endTurn(){
-    Message message = MessageBuilder.withPayload(Events.END_TURN).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
-  }
-  public void militiaAttack(){
-    Message message = MessageBuilder.withPayload(Events.MILITIA_ATTACK).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
-  }
-  public void endMilitiaTurn(){
-    Message message = MessageBuilder.withPayload(Events.END_MILITIA).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
-  }
-  public void endGame(){
-    Message message = MessageBuilder.withPayload(Events.BEGIN_TURN).build();
-    stateMachine
-        .sendEvent(Mono.just(message))
-        .subscribe();
-  }
-
-
-  public Player declareWinner(Game thisGame){
-    List<Player> players = thisGame.getPlayers();
-    Player winner;
-    for(Player player:players){
-      //TODO implement test of all players in Game table to see who has the most victory points
+    if (player.getId() == 1) {
+      signalMachine(Events.PLAYER_1_END);
+    }else{
+      signalMachine(Events.PLAYER_2_END);
     }
-    return winner;
   }
+
+  public void endGame(){
+    signalMachine(Events.GAME_FINISHES);
+  }
+
+
+
 
   public void trashCard(Card c) {
     trash.add(c);
@@ -178,5 +160,20 @@ public class GameLogic {
     turn.setActionsRemaining(howMany + turn.getActionsRemaining());
     return turn;
   }
+  public enum Events {
+    GAME_INTIALIZED,
+    GAME_STARTS,
+    GAME_FINISHES,
+    RETURN_TO_LOBBY,
+    END_ACTIONS,
+    END_BUYS,
+    END_TURN,
+    BEGIN_TURN,
+    BEGIN_GAME,
+    PLAYER_1_START,
+    PLAYER_1_END,
+    PLAYER_2_START,
+    PLAYER_2_END;
 
+  }
 }

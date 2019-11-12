@@ -25,5 +25,8 @@ public class Hand {
   public Hand newHand(Location location) {
     return new Hand(cardRepository.getAllByLocationId(location));
   }
+  public Hand draw(){
+
+  }
 
 }

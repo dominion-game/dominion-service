@@ -1,5 +1,7 @@
 package edu.cnm.deepdive.dominionservice.controller.state;
 
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
+import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
@@ -7,8 +9,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
+import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.annotation.OnTransition;
@@ -18,16 +24,20 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
+import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
 public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States, Events> {
 
-//TODO we will have to change autostartup when we build the lobby/waiting room but it works for now
   @Override
   public void configure(StateMachineConfigurationConfigurer<States, Events> config)
       throws Exception {
-    config.withConfiguration().autoStartup(true).listener(listener());
+    config.withConfiguration().autoStartup(true)
+         .beanFactory(new StaticListableBeanFactory())
+        .taskExecutor(new SyncTaskExecutor())
+        .taskScheduler(new ConcurrentTaskScheduler())
+        .listener(new StateMachineListener<States, Events>());
   }
 
   @Override
@@ -39,32 +49,32 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .initial(States.NOT_PLAYING)
         .state(States.NOT_PLAYING)
         .and()
-        .withStates()
-        .parent(States.NOT_PLAYING)
-        .initial(States.IDLE)
+          .withStates()
+          .parent(States.NOT_PLAYING)
+          .initial(States.IDLE)
           .state(States.GAME_SETUP)
-          .and()
-        .withStates()
-          .state(States.GAME_PLAYING)
         .and()
         .withStates()
-         .parent(States.GAME_PLAYING)
+        .state(States.GAME_PLAYING)
+        .and()
+          .withStates()
+          .parent(States.GAME_PLAYING)
           .initial(States.GAME_START)
           .state(States.GAME_START)
-          .and()
+        .and()
         .withStates()
         .initial(States.GAME_START)
         .state(States.GAME_START)
         .and()
-        .withStates()
-        .parent(States.GAME_START)
-        .initial(States.GAME_START)
-        .state(States.GAME_PLAYING)
+          .withStates()
+          .parent(States.GAME_START)
+          .initial(States.GAME_START)
+          .state(States.GAME_PLAYING)
         .and()
-        .withStates()
-        .parent(States.GAME_PLAYING)
-        .initial(States.PLAYER_1_TURN)
-        .state(States.PLAYER_1_TURN)
+          .withStates()
+          .parent(States.GAME_PLAYING)
+          .initial(States.PLAYER_1_TURN)
+          .state(States.PLAYER_1_TURN)
         .state(States.PLAYER_2_TURN);
 
   }
@@ -82,59 +92,127 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .source(States.GAME_SETUP).target(States.GAME_START).event(Events.GAME_STARTS)
         .and()
         .withExternal()
-        .source(States.GAME_START).target(States.GAME_PLAYING).event(Events.BEGIN_TURN)
+        .source(States.GAME_START).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
         .and()
-        .withInternal()
-        .source(States.GAME_PLAYING).event(Events.END_ACTIONS)
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START).action(newTurnAction())
         .and()
-        .withInternal()
-        .source(States.GAME_PLAYING).event(Events.)
+        .withExternal()
+        .source(States.PLAYER_1_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_1_END)
+        .and()
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.PLAYER_2_TURN).event(Events.PLAYER_2_START).action(newTurnAction())
+        .and()
+        .withExternal()
+        .source(States.PLAYER_2_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_2_END)
+        .and()
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.GAME_END).event(Events.GAME_FINISHES)
+        .and()
+        .withExternal()
+        .source(States.GAME_END).target(States.IDLE).event(Events.RETURN_TO_LOBBY);
 
   }
+
   //TODO see if we can set this up on initialization of game
-  public enum Variables{
+  public enum Variables {
     PLAYER_1,
     PLAYER_2
   }
 
   //LOGGING FOR THE TIME BEING, WILL PROBABLY BE UNNCESSARY IN PRODUCTION
   @Bean
-  public StateMachineListener<States, Events> listener(){
-    return new StateMachineListenerAdapter<States, Events>(){
+  public StateMachineListenerAdapter<States, Events> listener() {
+    return new StateMachineListenerAdapter<States, Events>() {
       @Override
-      public void stateChanged(States<States, Events> from, States<States, Events> to){
-        System.out.println("State change to "+to.toString());
+      public void stateChanged(State<States, Events> from, State<States, Events> to) {
+        System.out.println("State change to " + to.toString());
       }
     };
   }
 
-  //TURN START AND END METHODS, GAME START AND CLEANUP METHODS INCLUDING VICTORY,
-  //ENTRY AND EXIT METHODS
-  @Bean
-  public NewTurnAction newTurnAction(){
-    return new NewTurnAction();
-  }
-  //... more to come
 
-  public static class NewTurnAction implements Action<States, Events>{
+
+//TURN START AND END METHODS, GAME START AND CLEANUP METHODS INCLUDING VICTORY,
+//ENTRY AND EXIT METHODS
+@Bean
+public NewTurnAction newTurnAction(){
+    return new NewTurnAction(){
+      @Override
+      public void execute(StateContext<States, Events> stateContext) {
+        super.execute(stateContext);
+        //turn entry actions
+      }
+    };
+    }
+  @Bean
+  public EndTurnAction endTurnAction(){
+    return new EndTurnAction(){
+      @Override
+      public void execute(StateContext<States, Events> stateContext) {
+        super.execute(stateContext);
+        //turn exit actions
+      }
+    };
+  }
+  @Bean
+  public EndGameAction endGame(){
+    return new EndGameAction(){
+      @Override
+      public void execute(StateContext<States, Events> stateContext) {
+        super.execute(stateContext);
+      }
+    };
+  }
+
+public static class EndGameAction implements Action<States,Events>{
+
+  @Override
+  public void execute(StateContext<States, Events> stateContext) {
+
+  }
+}
+public static class NewTurnAction implements Action<States, Events> {
+
+  @Override
+  public void execute(StateContext<States, Events> stateContext) {
+
+  }
+}
+  public static class EndTurnAction implements Action<States, Events> {
 
     @Override
     public void execute(StateContext<States, Events> stateContext) {
-    //TODO override execute method
+
     }
   }
+
   @Bean
-  public GameLogic gameLogic(){
+  public GameLogic gameLogic() {
     return new GameLogic();
   }
 
-  @Target(ElementType.METHOD)
-  @Retention(RetentionPolicy.RUNTIME)
-  @OnTransition
-  public interface StatesOnTransition{
-    States[] source() default {};
-    States[] target() default {};
+  public
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@OnTransition
+public interface StatesOnTransition {
+
+  States[] source()
+
+  default {
   }
+
+  ;
+
+  States[] target()
+
+  default {
+  }
+
+  ;
+}
 
 
 }
