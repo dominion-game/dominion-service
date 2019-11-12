@@ -111,7 +111,7 @@ public class GameStateInfo implements Serializable {
     this.currentPlayerId = playerId;
   }
 
-  public void saveAll(GameStateInfo gameStateInfo) {
+  public void saveAll() {
     //call repository save methods
   }
 }
