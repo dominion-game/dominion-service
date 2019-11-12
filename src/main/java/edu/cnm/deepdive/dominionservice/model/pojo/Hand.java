@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.model.pojo;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
+import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Location;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Hand {
 
   private List<Card> cardsInHand;
 
+
   private Hand(List<Card> cardsInHand) {
     this.cardsInHand = cardsInHand;
   }
@@ -25,8 +27,9 @@ public class Hand {
   public Hand newHand(Location location) {
     return new Hand(cardRepository.getAllByLocationId(location));
   }
-  public Hand draw(fromwhere){
-
+  public List<Card> draw(DrawPile drawPile, GameStateInfo gameStateInfo){
+    drawPile.getTopCard(gameStateInfo);
+    return cardsInHand;
   }
 
 }
