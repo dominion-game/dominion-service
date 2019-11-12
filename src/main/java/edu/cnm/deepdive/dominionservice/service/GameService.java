@@ -34,9 +34,6 @@ public class GameService {
     return game;
   }
 
-  public GameState nextState(){
-    //alerts state machine
-  }
 
   public Game getGameById(Long gameId) {
     return gameRepository.getGameById(gameId);

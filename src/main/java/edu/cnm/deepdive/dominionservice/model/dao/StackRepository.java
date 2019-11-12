@@ -10,6 +10,10 @@ public interface StackRepository extends CrudRepository<Stack,Long> {
 
   List<Stack> findStackByStackType(StackType stackType);
 
+  List<StackType> getAllByStackType();
+
+  List<Integer> getAllByStackCount();
+
   @Override
   void delete(Stack stack);
 

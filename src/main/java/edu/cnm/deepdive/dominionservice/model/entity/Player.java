@@ -1,5 +1,8 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
+import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -26,7 +29,7 @@ public class Player {
 
   @NonNull
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name = "game_id", nullable = false, updatable = false)
+  @JoinColumn(name="game_id", nullable = false, updatable = false)
   private Game game;
 
   @Column
@@ -45,11 +48,12 @@ public class Player {
 
   private List<Card> playerHand;
 
-  @OneToMany(mappedBy = "turn", cascade = CascadeType.ALL)
-  private List<Turn> turns = new LinkedList<>();
 
-  @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
-  private List<Location> locations = new LinkedList<>();
+  @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
+  private ArrayList<Turn> turns = new ArrayList<>();
+
+  @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
+  private ArrayList<Location> locations = new ArrayList<>();
 
   /**
    * Sets player score.
@@ -111,16 +115,16 @@ public class Player {
     return turns;
   }
 
-  public void setTurns(List<Turn> turns) {
+  public void setTurns(ArrayList<Turn> turns) {
     this.turns = turns;
   }
 
-  public List<Location> getLocations() {
+  public ArrayList<Location> getLocations() {
     return locations;
   }
 
   public void setLocations(
-      List<Location> locations) {
+      ArrayList<Location> locations) {
     this.locations = locations;
   }
 
@@ -132,13 +136,18 @@ public class Player {
     this.playerState = playerState;
   }
 
-  /**
-   * public void setDeck(List<Card> deck) { this.deck = deck; }
-   * <p>
-   * public void setDiscard(List<Card> discard) { this.discard = discard; }
-   * <p>
-   * public void setHand(List<Card> hand) { this.hand = hand; }
-   */
+  /** public void setDeck(List<Card> deck) {
+    this.deck = deck;
+  }
+
+  public void setDiscard(List<Card> discard) {
+    this.discard = discard;
+  }
+
+  public void setHand(List<Card> hand) {
+    this.hand = hand;
+  }
+*/
   public Long getId() {
     return id;
   }
@@ -214,19 +223,20 @@ public class Player {
   public void setPlayerHand(List<Card> playerHand) {
     this.playerHand = playerHand;
   }
+ public enum PlayerState{
+   MY_TURN,
+   WATCHING,
+   MILITIA_RESPONSE,
+   ACTION;
 
-  public enum PlayerState {
-    MY_TURN,
-    WATCHING,
-    MILITIA_RESPONSE,
-    ACTION;
-  }
+   public DiscardPile getDiscardPile() {
+   }
+ }
 
   //  public static class Hand {
 //
 //  }
-  private void shuffleDrawPile() {
-
+  private void shuffleDrawPile(){
     //TODO
   }
 

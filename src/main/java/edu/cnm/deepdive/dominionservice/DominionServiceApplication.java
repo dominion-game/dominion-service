@@ -1,7 +1,7 @@
 package edu.cnm.deepdive.dominionservice;
 
-import edu.cnm.deepdive.dominionservice.model.states.Events;
-import edu.cnm.deepdive.dominionservice.model.states.States;
+import edu.cnm.deepdive.dominionservice.model.enums.Events;
+import edu.cnm.deepdive.dominionservice.model.enums.States;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

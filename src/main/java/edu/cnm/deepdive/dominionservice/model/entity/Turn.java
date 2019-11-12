@@ -1,5 +1,8 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
+import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
+import edu.cnm.deepdive.dominionservice.service.TurnService;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -18,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 /**
@@ -35,6 +39,11 @@ public class Turn {
     this.buysRemaining = buysRemaining;
     this.actionsRemaining = actionsRemaining;
   }
+
+  @Autowired
+  private TurnService turnService;
+  @Autowired
+  private CardRepository cardRepository;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -128,6 +137,13 @@ public class Turn {
 
   public void setPlays(List<Play> plays) {
     this.plays = plays;
+  }
+
+  public Hand getActiveHand(){
+    Player currentPlayer = this.getPlayer();
+    //index 0 of Player's get location should return the location of the players hand
+    Location playersHand = currentPlayer.getLocations().get(0);
+    return Hand.newHand(playersHand);
   }
 
   public enum TurnState {

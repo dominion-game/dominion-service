@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.dominionservice.model.states;
+package edu.cnm.deepdive.dominionservice.model.enums;
 
 public enum States {
   //super state not-playing
@@ -10,5 +10,7 @@ public enum States {
   GAME_PLAYING,
   GAME_START,
   TURN,
-  GAME_END
+  GAME_END,
+  PLAYER_1_TURN,
+  PLAYER_2_TURN
 }

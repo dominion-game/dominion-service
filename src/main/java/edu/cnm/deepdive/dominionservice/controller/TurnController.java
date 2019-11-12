@@ -1,13 +1,11 @@
 package edu.cnm.deepdive.dominionservice.controller;
 
 import edu.cnm.deepdive.dominionservice.model.dao.TurnRepository;
-import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn.TurnState;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
 import edu.cnm.deepdive.dominionservice.service.GameService;
-import edu.cnm.deepdive.dominionservice.service.PlayerService;
 import edu.cnm.deepdive.dominionservice.service.TurnService;
 import java.util.NoSuchElementException;
 import javax.servlet.http.HttpSession;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,9 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TurnController {
   @Autowired
   GameService gameService;
-
-  @Autowired
-  PlayerService playerService;
 
   @Autowired
   HttpSession httpSession;
@@ -59,39 +53,32 @@ public class TurnController {
     this.turnRepository = turnRepository;
   }
 
-  @PutMapping("/turn/endphase/{id}")
-  public TurnState endTurnPhase(@RequestParam int endThisStateId){
-
-    //Key: 1 = Action phase, 2 = Buy Phase. Ending Discard and draw calls the "end turn" mapping instead.
-    switch(endThisStateId){
-      case 1:
+  @PostMapping("endactions")
+  public TurnState endActions(){
+    //Ending Discard and draw calls the "end turn" mapping instead.
         gameLogic.endActions();
-        break;
-      case 2:
-        gameLogic.endBuys();
-        break;
-    }
-    return turnRepository.getCurrentTurnState();
+       //gamelogic updates turnstate and pas
+    return turnRepository.getCurrentTurnState();//OR gameLogic.getCurrentTurnState();
   }
 
-  @PutMapping("/turn/endturn")
+  @PutMapping("/endturn")
   public void endTurn(){
     gameLogic.endTurn();
+    //write to Database
   }
 
-  @GetMapping("/turn/{id}")
+  @GetMapping("{id}")
   public Turn getCurrentTurn(@PathVariable long turnId) {
     return turnRepository.getCurrentTurn();
   }
 
-  @GetMapping("/turn/{id}/state")
+  @GetMapping("{id}/state")
   public TurnState getCurrentTurnState(@PathVariable long turnId) {
     Turn currentTurn = turnRepository.findTurnById(turnId);
     return currentTurn.getTurnState();
   }
 
-
-  @PostMapping("/turn/new")
+  @PostMapping("/new")
   public ResponseEntity<Turn> startTurn(@RequestBody Turn newTurn, Player player) {
     gameLogic.startTurn(player);
     turnRepository.save(newTurn);
