@@ -9,15 +9,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class DrawPile {
   private Location location;
   private ArrayList<Card> drawPileCards;
 
 
-  public DrawPile(ArrayList<Card> drawPileCards, Location location) {
+  public DrawPile(ArrayList<Card> drawPileCards) {
     this.drawPileCards = drawPileCards;
-    this.location = location;
   }
 
 
@@ -32,11 +31,10 @@ public class DrawPile {
   }
 
   /**
-
-  public static DrawPile newDeck(ArrayList<Card> cards ) {
-    return new DrawPile(cards);
-  }
-*/
+   public static DrawPile newDeck(ArrayList<Card> cards ) {
+   return new DrawPile(cards);
+   }
+   */
   public ArrayList<Card> getDrawPileCards() {
     return drawPileCards;
   }

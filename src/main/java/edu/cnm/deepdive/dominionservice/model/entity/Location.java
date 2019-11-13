@@ -61,25 +61,6 @@ public class Location {
     return hasCards;
   }
 
-  public Card getTopCard(Location fromWhere) {
-    //gets the top card from a deck, discard, or stack. Will always return the same card for stacks, but
-    //decks and discards will be different
-    LocationType type = fromWhere.getLocationType();
-    if (fromWhere.hasCards) {
-      switch (type) {
-        case STACK:
-          break;
-        case DECK:
-          break;
-        case DISCARD:
-          break;
-        default:
-          //return invalid action error
-          break;
-      }
-    }
-
-  }
 
   public Long getId() {
     return id;
@@ -124,9 +105,12 @@ public class Location {
 
   public enum LocationType {
     STACK,
-    HAND,
-    DISCARD,
-    DECK,
+    PLAYER_1_HAND,
+    PLAYER_1_DISCARD,
+    PLAYER_1_DRAW_PILE,
+    PLAYER_2_HAND,
+    PLAYER_2_DISCARD,
+    PLAYER_2_DRAW_PILE,
     INPLAY;
   }
 }

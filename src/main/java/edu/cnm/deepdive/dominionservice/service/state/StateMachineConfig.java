@@ -1,15 +1,11 @@
-package edu.cnm.deepdive.dominionservice.controller.state;
+package edu.cnm.deepdive.dominionservice.service.state;
 
-import edu.cnm.deepdive.dominionservice.model.entity.Game;
+import edu.cnm.deepdive.dominionservice.model.dao.PlayerRepository;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +13,6 @@ import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
-import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -30,11 +25,17 @@ import org.springframework.statemachine.state.State;
 @EnableStateMachine
 public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States, Events> {
 
+  @Autowired
+  private GameLogic gameLogic;
+
+  @Autowired
+  private PlayerRepository playerRepository;
+
   @Override
   public void configure(StateMachineConfigurationConfigurer<States, Events> config)
       throws Exception {
     config.withConfiguration().autoStartup(true)
-         .beanFactory(new StaticListableBeanFactory())
+        .beanFactory(new StaticListableBeanFactory())
         .taskExecutor(new SyncTaskExecutor())
         .taskScheduler(new ConcurrentTaskScheduler())
         .listener(new StateMachineListener<States, Events>());
@@ -46,35 +47,26 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
     states
         .withStates()
-        .initial(States.NOT_PLAYING)
-        .state(States.NOT_PLAYING)
-        .and()
-          .withStates()
-          .parent(States.NOT_PLAYING)
-          .initial(States.IDLE)
-          .state(States.GAME_SETUP)
-        .and()
-        .withStates()
         .state(States.GAME_PLAYING)
         .and()
-          .withStates()
-          .parent(States.GAME_PLAYING)
-          .initial(States.GAME_START)
-          .state(States.GAME_START)
+        .withStates()
+        .parent(States.GAME_PLAYING)
+        .initial(States.GAME_START)
+        .state(States.GAME_START)
         .and()
         .withStates()
         .initial(States.GAME_START)
         .state(States.GAME_START)
         .and()
-          .withStates()
-          .parent(States.GAME_START)
-          .initial(States.GAME_START)
-          .state(States.GAME_PLAYING)
+        .withStates()
+        .parent(States.GAME_START)
+        .initial(States.GAME_START)
+        .state(States.GAME_PLAYING)
         .and()
-          .withStates()
-          .parent(States.GAME_PLAYING)
-          .initial(States.PLAYER_1_TURN)
-          .state(States.PLAYER_1_TURN)
+        .withStates()
+        .parent(States.GAME_PLAYING)
+        .initial(States.PLAYER_1_TURN)
+        .state(States.PLAYER_1_TURN)
         .state(States.PLAYER_2_TURN);
 
   }
@@ -93,15 +85,18 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .and()
         .withExternal()
         .source(States.GAME_START).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
+        .action(gameSetupAction())
         .and()
         .withExternal()
-        .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START).action(newTurnAction())
+        .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START)
+        .action(newTurnActionPlayer1())
         .and()
         .withExternal()
         .source(States.PLAYER_1_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_1_END)
         .and()
         .withExternal()
-        .source(States.GAME_PLAYING).target(States.PLAYER_2_TURN).event(Events.PLAYER_2_START).action(newTurnAction())
+        .source(States.GAME_PLAYING).target(States.PLAYER_2_TURN).event(Events.PLAYER_2_START)
+        .action(newTurnActionPlayer2())
         .and()
         .withExternal()
         .source(States.PLAYER_2_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_2_END)
@@ -114,11 +109,17 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
   }
 
-  //TODO see if we can set this up on initialization of game
-  public enum Variables {
-    PLAYER_1,
-    PLAYER_2
+  @Bean
+  GameSetupAction gameSetupAction() {
+    return new GameSetupAction() {
+      @Override
+      public void execute(StateContext<States, Events> stateContext) {
+        gameLogic.initGame();
+        super.execute(stateContext);
+      }
+    };
   }
+
 
   //LOGGING FOR THE TIME BEING, WILL PROBABLY BE UNNCESSARY IN PRODUCTION
   @Bean
@@ -132,54 +133,84 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
   }
 
 
-
-//TURN START AND END METHODS, GAME START AND CLEANUP METHODS INCLUDING VICTORY,
+  //TURN START AND END METHODS, GAME START AND CLEANUP METHODS INCLUDING VICTORY,
 //ENTRY AND EXIT METHODS
-@Bean
-public NewTurnAction newTurnAction(){
-    return new NewTurnAction(){
+  @Bean
+  public NewTurnAction newTurnActionPlayer1() {
+    return new NewTurnAction() {
       @Override
       public void execute(StateContext<States, Events> stateContext) {
+        Player player = playerRepository.findPlayerById((long) 1);
+        gameLogic.startTurn(player);
         super.execute(stateContext);
+
         //turn entry actions
       }
     };
-    }
+  }
+
   @Bean
-  public EndTurnAction endTurnAction(){
-    return new EndTurnAction(){
+  public NewTurnAction newTurnActionPlayer2() {
+    return new NewTurnAction() {
       @Override
       public void execute(StateContext<States, Events> stateContext) {
+        Player player = playerRepository.findPlayerById((long) 2);
+        gameLogic.startTurn(player);
+        super.execute(stateContext);
+
+        //turn entry actions
+      }
+    };
+  }
+
+  @Bean
+  public EndTurnAction endTurnAction() {
+    return new EndTurnAction() {
+      @Override
+      public void execute(StateContext<States, Events> stateContext) {
+        gameLogic.testForVictory();
         super.execute(stateContext);
         //turn exit actions
       }
     };
   }
+
   @Bean
-  public EndGameAction endGame(){
-    return new EndGameAction(){
+  public EndGameAction endGame() {
+    return new EndGameAction() {
       @Override
       public void execute(StateContext<States, Events> stateContext) {
+        gameLogic.endGame();
         super.execute(stateContext);
       }
     };
   }
 
-public static class EndGameAction implements Action<States,Events>{
+  public static class EndGameAction implements Action<States, Events> {
 
-  @Override
-  public void execute(StateContext<States, Events> stateContext) {
+    @Override
+    public void execute(StateContext<States, Events> stateContext) {
 
+    }
   }
-}
-public static class NewTurnAction implements Action<States, Events> {
 
-  @Override
-  public void execute(StateContext<States, Events> stateContext) {
+  public static class NewTurnAction implements Action<States, Events> {
 
+    @Override
+    public void execute(StateContext<States, Events> stateContext) {
+
+    }
   }
-}
+
   public static class EndTurnAction implements Action<States, Events> {
+
+    @Override
+    public void execute(StateContext<States, Events> stateContext) {
+
+    }
+  }
+
+  public static class GameSetupAction implements Action<States, Events> {
 
     @Override
     public void execute(StateContext<States, Events> stateContext) {
@@ -191,28 +222,5 @@ public static class NewTurnAction implements Action<States, Events> {
   public GameLogic gameLogic() {
     return new GameLogic();
   }
-
-  public
-
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@OnTransition
-public interface StatesOnTransition {
-
-  States[] source()
-
-  default {
-  }
-
-  ;
-
-  States[] target()
-
-  default {
-  }
-
-  ;
-}
-
 
 }

@@ -50,6 +50,9 @@ public class Player {
   @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
   private ArrayList<Location> locations = new ArrayList<>();
 
+
+  private int extraGoldIfSilver;
+
   /**
    * Sets player score.
    *
@@ -102,7 +105,7 @@ public class Player {
     return turns;
   }
 
-  public void setTurns(List<Turn> turns) {
+  public void setTurns(ArrayList<Turn> turns) {
     this.turns = turns;
   }
 
@@ -213,6 +216,8 @@ public class Player {
  public enum PlayerState{
    MY_TURN,
    WATCHING,
+   BUYING,
+   DISCARDING,
    MILITIA_RESPONSE,
    ACTION;
 
@@ -223,6 +228,7 @@ public class Player {
 //  public static class Hand {
 //
 //  }
+  /**
   private void shuffleDrawPile(){
     //TODO
   }
@@ -244,7 +250,7 @@ public class Player {
     Card newCard = drawPile.remove(0);
     hand.add(newCard);
   }
-
+*/
   public void addAction(){
     numAction++;
   }

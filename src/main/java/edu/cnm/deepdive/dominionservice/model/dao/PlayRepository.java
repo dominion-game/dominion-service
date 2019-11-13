@@ -11,6 +11,8 @@ public interface PlayRepository extends CrudRepository<Play,Long> {
 
   Play findPlayByTurn(Turn turn);
 
+  List<Play> getAllByTurn(Turn turn);
+
   @Override
   void deleteAll();
 }

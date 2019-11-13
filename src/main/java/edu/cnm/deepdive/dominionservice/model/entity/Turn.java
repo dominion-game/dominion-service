@@ -2,7 +2,6 @@ package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
 import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
-import edu.cnm.deepdive.dominionservice.service.TurnService;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -33,22 +32,19 @@ import org.springframework.lang.NonNull;
 @Table
 public class Turn {
 
-  public Turn(Long id, Player player, int buysRemaining, int actionsRemaining) {
-    this.id = id;
+  public Turn(Game game, Player player) {
     this.player = player;
-    this.buysRemaining = buysRemaining;
-    this.actionsRemaining = actionsRemaining;
+    this.buysRemaining = 1;
+    this.actionsRemaining = 1;
+    this.game = game;
   }
 
-  @Autowired
-  private TurnService turnService;
-  @Autowired
   private CardRepository cardRepository;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "turn_id", updatable = false, nullable = false)
-  private Long id;
+  private int id;
 
   /**
    * Foreign Key playerId, refers to the player who took this turn.
@@ -59,6 +55,11 @@ public class Turn {
   private Player player;
 
   @Column
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name = "game_id", nullable = false, updatable = false)
+  private Game game;
+
+  @Column
   private int buyingPower;
 
   /**
@@ -67,6 +68,9 @@ public class Turn {
    */
   @Column(name = "buys")
   private int buysRemaining;
+
+  @Column(name="successful_attack")
+  private boolean didAttack;
 
   /**
    * Actions Remaining- a counter that iterates down to zero. When it returns zero, a method is
@@ -97,7 +101,7 @@ public class Turn {
     this.turnState = turnState;
   }
 
-  public Long getId() {
+  public int getId() {
     return id;
   }
 
@@ -126,6 +130,25 @@ public class Turn {
     this.actionsRemaining = actionsRemaining;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public Game getGame() {
+    return game;
+  }
+
+  public void setGame(Game game) {
+    this.game = game;
+  }
+
+  public boolean isDidAttack() {
+    return didAttack;
+  }
+
+  public void setDidAttack(boolean didAttack) {
+    this.didAttack = didAttack;
+  }
 
   public int getBuyingPower() {
     return buyingPower;
@@ -139,12 +162,7 @@ public class Turn {
     this.plays = plays;
   }
 
-  public Hand getActiveHand(){
-    Player currentPlayer = this.getPlayer();
-    //index 0 of Player's get location should return the location of the players hand
-    Location playersHand = currentPlayer.getLocations().get(0);
-    return Hand.newHand(playersHand);
-  }
+
 
   public enum TurnState {
     ACTING,

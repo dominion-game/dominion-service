@@ -1,4 +1,4 @@
-package edu.cnm.deepdive.dominionservice.service;
+/**package edu.cnm.deepdive.dominionservice.service;
 
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Card.CardCategory;
@@ -9,16 +9,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class CardService {
 
- /** public Card draw(Location fromWhere, Player player, Location toWhere) {
-    if (fromWhere.getLocationType()== LocationType.STACK){
-      //TODO fix this
-    } else if (fromWhere.getLocationType() == LocationType.DECK){
-      //TODO implement draw from deck
-    }
 
-    card.changeLocation(toWhere);
-    return card;
-  }**/
   public void drawCard() {
     Card c = getTopCard();
     if(c != null) {
@@ -48,12 +39,6 @@ public class CardService {
     return null;
   }
 
-  private void sendCardToHand(Card c) {
-    RemoteMessage rm = new RemoteMessage(Action.addCardToHand, playerNum, c, null);
-    System.out.println("Server: sending card to player " + rm);
-    //TODO send to everyone that you got a card
-    streams.sendMessage(rm);
-  }
 
   public Card getCardFromStack(Card card)
   {
@@ -64,7 +49,7 @@ public class CardService {
     }
     return null;
   }
-
+/**
   public Card getTopCard() {
     if(deck.isEmpty()) {
       deck.addAll(discard);
@@ -79,5 +64,5 @@ public class CardService {
     return null;
   }
 
+*/
 
-}

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.springframework.stereotype.Component;
 
-//@Component
+
 public class DiscardPile {
 
   private ArrayList<Card> discardCards;

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@Component
 public class Hand {
 
 
@@ -19,7 +18,7 @@ public class Hand {
   private List<Card> cardsInHand;
 
 
-  private Hand(List<Card> cardsInHand) {
+  public Hand(List<Card> cardsInHand) {
     this.cardsInHand = cardsInHand;
   }
 
@@ -41,4 +40,20 @@ public class Hand {
     return cardsInHand;
   }
 
+  public CardRepository getCardRepository() {
+    return cardRepository;
+  }
+
+  public void setCardRepository(CardRepository cardRepository) {
+    this.cardRepository = cardRepository;
+  }
+
+  public List<Card> getCardsInHand() {
+    return cardsInHand;
+  }
+
+  public void setCardsInHand(
+      List<Card> cardsInHand) {
+    this.cardsInHand = cardsInHand;
+  }
 }

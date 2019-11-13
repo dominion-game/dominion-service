@@ -8,6 +8,8 @@ public interface StackRepository extends CrudRepository<Stack,Long> {
 
   List<Stack> save(Stack stack);
 
+  List<Stack> getAllByGame_Id();
+
   List<Stack> findStackByStackType(StackType stackType);
 
   List<StackType> getAllByStackType();
@@ -19,4 +21,10 @@ public interface StackRepository extends CrudRepository<Stack,Long> {
 
   @Override
   void deleteAll();
+
+  int getCountByStackType();
+
+  int findAllByGameAndStackCountIsZero();
+
+  List<Stack> getAllByGameId(long gameId);
 }

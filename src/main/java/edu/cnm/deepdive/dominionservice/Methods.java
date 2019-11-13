@@ -1,3 +1,5 @@
+/**
+
 package edu.cnm.deepdive.dominionservice;
 
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
@@ -15,15 +17,9 @@ import java.util.Collections;
 public class Methods {
 
   /** Game Methods*/
- public int numPlayers() {
-
- }
-  public void deal(Game game);
-
   /** DECK METHODS*
 
 
-  /**CARD METHODS*/
 
   public Card changeLocation(Card card, Location newLocation){
     //DAO UPDATE LOCATION METHOD
@@ -79,14 +75,13 @@ public class Methods {
   }
 
 
-  /** Player methods */
   public Card draw(Location fromWhere, Player player, Location toWhere){
     //Return a new card from a stack, deck, or other
     card.changeLocation(toWhere);
     return card;
   }
 
-  /** Location methods */
+  /** Location methods
 
 
   public boolean hasCards(Location fromWhere){
@@ -102,7 +97,7 @@ public class Methods {
 
   "ERICA"
 
- /** Card Methods: */
+ /** Card Methods:
   Card type;
   int numLeft;
 
@@ -188,11 +183,5 @@ public class Methods {
 
 
 
-
-
-  /** Game Methods: */
-
-
-}
 
 

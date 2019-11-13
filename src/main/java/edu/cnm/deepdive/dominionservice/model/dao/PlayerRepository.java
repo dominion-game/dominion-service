@@ -13,4 +13,6 @@ public interface PlayerRepository extends CrudRepository<Player,Long> {
 
   @Override
   void deleteAll();
+
+  Player getPlayerById(int i);
 }

@@ -3,15 +3,10 @@ package edu.cnm.deepdive.dominionservice.controller;
 import edu.cnm.deepdive.dominionservice.model.dao.GameRepository;
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
-import edu.cnm.deepdive.dominionservice.service.GameService;
 import java.util.NoSuchElementException;
-import javax.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 @ExposesResourceFor(Game.class)
 public class GameController {
 
@@ -32,30 +27,29 @@ public class GameController {
   public GameController(GameRepository gameRepository) {
     this.gameRepository = gameRepository;
   }
-  @Autowired
-  GameService gameService;
 
-  @Autowired
-  PlayerService playerService;
 
-  @Autowired
-  HttpSession httpSession;
 
-  Logger logger = LoggerFactory.getLogger(GameController.class);
 
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")
   public GameStateInfo createNewGame(@RequestBody Game newGame) {
-    Game game = gameService.createNewGame(playerService.getUser(), gameRepository);
-    httpSession.setAttribute("gameId", game.getId());
-    logger.info("new game id# " + httpSession.getAttribute("gameId")+" stored in session");
-    return game;
+   //TODO
+    GameStateInfo gameStateInfo = new GameStateInfo(game);
+    return gameStateInfo;
   }
 
 
   @GetMapping(value = "/{id")
-  public Game getGameinfo(@PathVariable long id){
+  public Game getGameinfo(@PathVariable("id") long id){
     return gameRepository.getGameById(id);
+  }
+
+  @GetMapping("{gameid}/state")
+  public GameStateInfo getCurrentTurnState(@PathVariable("gameid") long gameId) {
+    //TODO add filter so GameStateInfo does not return all the info on the contents of other persons hand, either deck
+    GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
+    return gameStateInfo;
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)

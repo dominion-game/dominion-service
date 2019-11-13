@@ -47,21 +47,20 @@ public class Play {
    * Each play is a associated with zero or more cards played. This records a log of which card was
    * played and when.
    */
-  @NonNull
+
   @Column(name = "card_played", nullable = true, updatable = false)
   private int cardPlayed;
 
   /**
    * Each play is associated with zero or more gold spent, typically to buy new cards.
    */
-  @NonNull
   @Column(name = "gold_spent", nullable = true, updatable = false)
   private int goldSpent;
 
   /**
    * Each play is associated with zero or more cards bought.
    */
-  @NonNull
+
   @Column(name = "card_bought", nullable = true, updatable = false)
   private int cardBoughtId;
 

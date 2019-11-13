@@ -1,3 +1,4 @@
+/**
 package edu.cnm.deepdive.dominionservice.service;
 
 import edu.cnm.deepdive.dominionservice.model.dao.GameRepository;
@@ -19,13 +20,8 @@ public class GameService {
     this.gameRepository = gameRepository;
   }
 
-  public Game createNewGame(Player player, GameRepository gameRepository) {
+  public Game createNewGame(Game player, GameRepository gameRepository) {
     Game game = new Game();
-    /**TODO:
-     * for (Player : PlayerQueue){
-     * game.setFirstPlayer(player);
-     *     game.setSecondPlayer();
-     *     */
 
     return game;
   }
@@ -39,3 +35,4 @@ public class GameService {
     return gameRepository.getGameById(gameId);
   }
 }
+*/
