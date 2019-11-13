@@ -35,7 +35,7 @@ public class GameController {
   @PostMapping(value = "/create")
   public GameStateInfo createNewGame(@RequestBody Game newGame) {
    //TODO
-    GameStateInfo gameStateInfo = new GameStateInfo(game);
+    GameStateInfo gameStateInfo = new GameStateInfo(newGame);
     return gameStateInfo;
   }
 

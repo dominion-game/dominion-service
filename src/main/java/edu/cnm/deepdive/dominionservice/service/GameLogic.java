@@ -79,7 +79,7 @@ public class GameLogic {
   public GameStateInfo playCardWithCards(int cardId, long gameId, int playerId, ArrayList<Card> cards) {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
-    playingCard.getCardType().play(gameStateInfo, cards);
+    playingCard.getCardType().playWithCards(gameStateInfo, cards);
     if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
       endActions(gameStateInfo);
       gameStateInfo.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);

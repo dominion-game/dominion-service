@@ -19,7 +19,7 @@ import org.springframework.statemachine.config.EnableStateMachineFactory;
 @EnableStateMachine
 @SpringBootApplication
 @EnableWebSecurity
-public class DominionServiceApplication extends ResourceServerConfigurerAdapter,
+public class DominionServiceApplication extends ResourceServerConfigurerAdapter
     implements CommandLineRunner{
   private final StateMachine<States, Events> stateMachine;
   //private static Logger logger = LoggingUtils.LOGGER;
