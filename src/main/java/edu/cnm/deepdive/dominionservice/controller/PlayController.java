@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/play")
+@RequestMapping("/games/{gameId}/play")
 @ExposesResourceFor(Play.class)
 public class PlayController {
 
@@ -38,8 +38,8 @@ public class PlayController {
   Logger logger = LoggerFactory.getLogger(PlayController.class);
 
    @PostMapping("/card/play/{id}")
-  public GameStateInfo playCard(@PathVariable int cardId, long gameId, int playerId){
-     return gameLogic.playCard(cardId, gameId, playerId);
+  public GameStateInfo playCard(@PathVariable CardType cardType){
+     return gameLogic.playCard(cardType);
   }
 
   @PostMapping("/buy/{cardtype}")

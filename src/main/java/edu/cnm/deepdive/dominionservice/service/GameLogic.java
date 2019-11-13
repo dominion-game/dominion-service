@@ -38,7 +38,7 @@ public class GameLogic {
   CardRepository cardRepository;
 
 
-  public GameStateInfo playCard(int cardId, long gameId, int playerId) {
+  public GameStateInfo playCard(CardType cardType, long gameId, int playerId) {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
     playingCard.getCardType().play(, gameStateInfo, playerId);

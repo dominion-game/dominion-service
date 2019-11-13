@@ -20,36 +20,24 @@ public class DrawPile {
     this.location = location;
   }
 
-  //this is an overload of the constructor, to use to create a new deck when we are combining the discards
-  //into it. Used in shuffle method.
-  public DrawPile(ArrayList<Card> drawPileCards, ArrayList<Card> discardPile) {
-    this.drawPileCards = shuffleDeckAndDiscard(discardPile, drawPileCards);
-  }
-
-  private ArrayList<Card> shuffleDeckAndDiscard(ArrayList<Card> discardPile, ArrayList<Card> drawPileCards) {
-    ArrayList<Card> combinedDeckList = new ArrayList<>();
-    combinedDeckList.addAll(drawPileCards);
-    combinedDeckList.addAll(discardPile);
-    Collections.shuffle(combinedDeckList);
-    return combinedDeckList;
-  }
 
   public Card getTopCard(GameStateInfo gameStateInfo) {
     if (drawPileCards.isEmpty()) {
-      ArrayList<Card> discardPile = gameStateInfo.getPlayerStateInfoPlayer1().getDiscardPile().getDiscardCards();
-      this.drawPileCards = shuffleDeckAndDiscard(discardPile, drawPileCards);
+      //if drawPile exhausted, get shuffled discardPile and make new drawPile
+      this.drawPileCards = gameStateInfo.getCurrentPlayerStateInfo().getDiscardPile().makeNewDrawPile();
     }
-    return drawPileCards.get(0);
+    Card topCard = drawPileCards.get(0);
+    drawPileCards.remove(0);
+    return topCard;
   }
 
   /**
-
-  public static DrawPile newDeck(ArrayList<Card> cards ) {
-    return new DrawPile(cards);
-  }
-*/
-  public ArrayList<Card> getDeckCards() {
-    return deckCards;
+   public static DrawPile newDeck(ArrayList<Card> cards ) {
+   return new DrawPile(cards);
+   }
+   */
+  public ArrayList<Card> getDrawPileCards() {
+    return drawPileCards;
   }
 
   public long getLocationId() {
@@ -65,7 +53,7 @@ public class DrawPile {
   }
 
   public void setDeckCards(
-      ArrayList<Card> deckCards) {
-    this.deckCards = deckCards;
+      ArrayList<Card> drawPileCards) {
+    this.drawPileCards = drawPileCards;
   }
 }

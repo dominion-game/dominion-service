@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PlayerStateInfo {
+
   @Autowired
   private TurnRepository turnRepository;
 
   @Autowired
-      private CardRepository cardRepository;
+  private CardRepository cardRepository;
 
   Turn turn;
   Player player;
@@ -28,8 +29,8 @@ public class PlayerStateInfo {
   PhaseState phaseState;
 
   public PlayerStateInfo(Game game, Player player) {
-    this.game=game;
-    this.player=player;
+    this.game = game;
+    this.player = player;
     this.turn = turnRepository.getCurrentTurn();
     //TODO change location ID search to location type enum
     this.hand = new Hand(new ArrayList<>(cardRepository.getAllByLocationId());
@@ -94,6 +95,7 @@ public class PlayerStateInfo {
   public void setDiscardPile(DiscardPile discardPile) {
     this.discardPile = discardPile;
   }
+
   public enum PhaseState {
     DISCARDING,
     TAKING_ACTION,
