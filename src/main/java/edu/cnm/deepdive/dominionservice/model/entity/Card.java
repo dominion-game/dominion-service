@@ -1,10 +1,8 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
-import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.pojo.DrawPile;
 import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,19 +40,6 @@ public class Card {
   @Column(updatable = false)
   private int cost;
 
-  @Column
-  private LocationType locationType;
-
-  @Column
-  private int locationIndex;
-
-  public int getLocationIndex() {
-    return locationIndex;
-  }
-
-  public void setLocationIndex(int locationIndex) {
-    this.locationIndex = locationIndex;
-  }
 
   /***
    * name of card
@@ -79,26 +64,6 @@ public class Card {
     return cardType;
   }
 
-  public void setCost(int cost) {
-    this.cost = cost;
-  }
-
-  public LocationType getLocationType() {
-    return locationType;
-  }
-
-  public void setLocationType(
-      LocationType locationType) {
-    this.locationType = locationType;
-  }
-
-  public void setCardName(@NonNull String cardName) {
-    this.cardName = cardName;
-  }
-
-  public void setCardType(@NonNull CardType cardType) {
-    this.cardType = cardType;
-  }
 
   @NonNull
   private CardType cardType;
@@ -106,50 +71,54 @@ public class Card {
   public enum CardType {
     COPPER {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        GameStateInfo.addBuyingPower();
+      }
     },
     SILVER {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        GameStateInfo.addBuyingPower(3);
+      }
     },
     GOLD {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        gameStateInfo.addBuyingPower(6);
+      }
     },
     ESTATE {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        //Not an action or money card.Counts as points at end of game
+      }
     },
     DUCHY {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        //Not an action or money card.Counts as points at end of game
+
+      }
     },
     PROVINCE {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {}
+      public void play(GameStateInfo gameStateInfo) {
+        //Not an action or money card.Counts as points at end of game
+      }
     },
 
     CELLAR {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         //discard any number of cards from hand, redraw that many cards
-        // need to select which cards to be deleted
-
         int numDiscarded = additionalCards.size();
         for (int i = 0; i < numDiscarded; i++) {
-          gameStateInfo.getCurrentPlayerStateInfo(.additionalCards.get(i));
+          gameStateInfo.discardCard(additionalCards.get(i));
         }
         for (int i = 0; i < numDiscarded; i++) {
           DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-          Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-          hand.draw(drawPile,gameStateInfo, 1);
+          Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+          gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
         }
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
@@ -158,11 +127,14 @@ public class Card {
     },
     MOAT {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-        hand.draw(drawPile,gameStateInfo, 2);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
+
+        DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
@@ -171,11 +143,10 @@ public class Card {
 
     MARKET {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-        hand.draw(drawPile,gameStateInfo, 1);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
@@ -192,11 +163,10 @@ public class Card {
 
     MERCHANT {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-        hand.draw(drawPile,gameStateInfo, 1);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
@@ -208,8 +178,7 @@ public class Card {
     },
     MILITIA {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
 
@@ -220,8 +189,7 @@ public class Card {
 
     MINE {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         //TODO make sure additional cards has a card in it (how to hand error state)
         gameStateInfo.trashCard(additionalCards.get(0));
         gameStateInfo.getTreasure();
@@ -235,8 +203,7 @@ public class Card {
 
     REMODEL {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         //TODO make sure additional cards has a card in it (how to hand error state)
         gameStateInfo.trashCard(additionalCards.get(0));
 
@@ -250,12 +217,18 @@ public class Card {
 
     SMITHY {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-        hand.draw(drawPile,gameStateInfo, 3); // How many cards????
-        gameStateInfo.getCurrentPlayerStateInfo().setHand(hand);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
+
+        drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
+
+        drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
@@ -264,11 +237,10 @@ public class Card {
 
     VILLAGE {
       @Override
-      public void play(GameStateInfo gameStateInfo,
-          List<Card> additionalCards) {
+      public void play(GameStateInfo gameStateInfo) {
         DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-        hand.draw(drawPile,gameStateInfo, 1);
+        Hand newHand = gameStateInfo.getCurrentPlayerStateInfo().getHand().draw(drawPile);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(newHand);
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 2);
@@ -278,9 +250,7 @@ public class Card {
     },
     WORKSHOP {
       @Override
-      public void play(GameStateInfo gameStateInfo, List<Card> additionalCards) {
-
-
+      public void play(GameStateInfo gameStateInfo) {
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
 
@@ -288,8 +258,7 @@ public class Card {
       }
     };
 
-    public abstract void play(GameStateInfo gameStateInfo,
-        List<Card> additionalCards);
+    public abstract void play(GameStateInfo gameStateInfo);
   }
-
 }
+
