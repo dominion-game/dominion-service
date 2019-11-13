@@ -62,6 +62,12 @@ public class Turn {
   @Column
   private int buyingPower;
 
+  @Column
+  private int extraMoney;
+
+  @Column
+  private int extraMoneyIfSilver;
+
   /**
    * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is
    * triggered to move to the next phase (discard).

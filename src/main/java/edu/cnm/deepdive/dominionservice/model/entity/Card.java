@@ -107,16 +107,17 @@ public class Card {
           List<Card> additionalCards) {
         //discard any number of cards from hand, redraw that many cards
         // need to select which cards to be deleted
-
         int numDiscarded = additionalCards.size();
+
         for (int i = 0; i < numDiscarded; i++) {
-          gameStateInfo.getCurrentPlayerStateInfo(.additionalCards.get(i));
+          gameStateInfo.getCurrentPlayerStateInfo().getHand().getCardsInHand()
+              .remove(additionalCards[i];)
         }
-        for (int i = 0; i < numDiscarded; i++) {
-          DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
-          Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
-          hand.draw(drawPile,gameStateInfo, 1);
-        }
+        DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
+        Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
+        hand.draw(drawPile,gameStateInfo,numDiscarded);
+
+
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
 
@@ -176,6 +177,11 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {
+
+        if (gameStateInfo.getCurrentPlayer()==PLAYER_ONE){
+          PLAYER_TWO
+        };
+
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
 
