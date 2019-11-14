@@ -1,8 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
-import edu.cnm.deepdive.dominionservice.model.pojo.DiscardPile;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,12 +31,7 @@ public class Player {
   @Column
   private int playerScore;
 
-  @Column
-  private int whoseTurn;
 
-  private int numAction;
-
-  private int numBuy;
 
   private int extraGold;
 
@@ -47,8 +40,6 @@ public class Player {
   @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
   private ArrayList<Turn> turns = new ArrayList<>();
 
-  @OneToMany(mappedBy="location", cascade=CascadeType.ALL)
-  private ArrayList<Location> locations = new ArrayList<>();
 
 
   private int extraGoldIfSilver;
@@ -109,14 +100,6 @@ public class Player {
     this.turns = turns;
   }
 
-  public ArrayList<Location> getLocations() {
-    return locations;
-  }
-
-  public void setLocations(
-      ArrayList<Location> locations) {
-    this.locations = locations;
-  }
 
   public PlayerState getPlayerState() {
     return playerState;

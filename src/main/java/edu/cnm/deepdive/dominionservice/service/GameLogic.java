@@ -2,7 +2,7 @@ package edu.cnm.deepdive.dominionservice.service;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.GameRepository;
-import edu.cnm.deepdive.dominionservice.model.dao.LocationRepository;
+
 import edu.cnm.deepdive.dominionservice.model.dao.PlayRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.PlayerRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.StackRepository;
@@ -12,8 +12,6 @@ import edu.cnm.deepdive.dominionservice.model.dto.PlayerStateInfo.PhaseState;
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Card.CardType;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
-import edu.cnm.deepdive.dominionservice.model.entity.Location;
-import edu.cnm.deepdive.dominionservice.model.entity.Location.LocationType;
 import edu.cnm.deepdive.dominionservice.model.entity.Play;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Player.PlayerState;
@@ -57,29 +55,17 @@ public class GameLogic {
   @Autowired
   PlayerRepository playerRepository;
 
-  @Autowired
-  LocationRepository locationRepository;
+
 
   @Autowired
   StackRepository stackRepository;
 
 
 
-  public GameStateInfo playCard(int cardId, long gameId, int playerId) {
-    GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
-    Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
-    playingCard.getCardType().play(gameStateInfo);
-    if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
-      endActions(gameStateInfo);
-      gameStateInfo.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
-    }
-    gameStateInfo.saveAll();
-    return gameStateInfo;
-  }
   public GameStateInfo playCardWithCards(int cardId, long gameId, int playerId, ArrayList<Card> cards) {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
-    playingCard.getCardType().playWithCards(gameStateInfo, cards);
+    playingCard.getCardType().play(gameStateInfo, cards);
     if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
       endActions(gameStateInfo);
       gameStateInfo.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
@@ -121,8 +107,6 @@ public class GameLogic {
     //TODO modify to bring in lobby, Oauth credentials, etc
     playerRepository.save(new Player());
     signalMachine(Events.BEGIN_GAME);
-    //get all location types and initialize database
-    //for (LocationType locationType : LocationType){
     ArrayList<Stack> allStacks = new ArrayList(stackRepository.getAllByStackType());
     for (Stack stack : allStacks){
       stack.setStackCount(stack.getStackType().getInitialCardAmounts());

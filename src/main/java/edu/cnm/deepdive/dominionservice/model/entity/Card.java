@@ -1,14 +1,14 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
-import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
-import edu.cnm.deepdive.dominionservice.model.pojo.DrawPile;
-import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import org.springframework.lang.NonNull;
 
 @Entity
@@ -33,15 +33,31 @@ public class Card {
     return new Card(cardName, cardType, cost);
   }
 
-//  @Id
-//  @GeneratedValue
-//  @Column(name = "card_id", updatable = false, nullable = false)
-//  private long id;
+    @Id
+    @GeneratedValue
+     @Column(name = "card_id", updatable = false, nullable = false)
+     private int id;
 
   @Id
   @NonNull
   @Column(name = "card_type", updatable = false, nullable = false)
   private CardType cardType;
+
+  @Column
+  private int index;
+
+
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="draw_pile_id", nullable = false, updatable = false)
+  private DrawPile drawPile;
+
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="discard_pile_id", nullable = false, updatable = false)
+  private DiscardPile discardPile;
+
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name="hand_id", nullable = false, updatable = false)
+  private Hand hand;
 
   /***
    * cost of card
@@ -69,36 +85,114 @@ public class Card {
     return cardType;
   }
 
+  public void setCardType(@NonNull CardType cardType) {
+    this.cardType = cardType;
+  }
+
+  public DrawPile getDrawPile() {
+    return drawPile;
+  }
+
+  public void setDrawPile(DrawPile drawPile) {
+    this.drawPile = drawPile;
+  }
+
+  public DiscardPile getDiscardPile() {
+    return discardPile;
+  }
+
+  public void setDiscardPile(DiscardPile discardPile) {
+    this.discardPile = discardPile;
+  }
+
+  public Hand getHand() {
+    return hand;
+  }
+
+  public void setHand(Hand hand) {
+    this.hand = hand;
+  }
+
+  public void setCost(int cost) {
+    this.cost = cost;
+  }
+
+  public void setCardName(@NonNull String cardName) {
+    this.cardName = cardName;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getIndex() {
+    return index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
+  }
+
+
   public enum CardType {
     COPPER {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+
+      @Override
+      public String toString() {
+        return "Copper";
+      }
     },
     SILVER {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+      @Override
+      public String toString() {
+        return "Silver";
+      }
     },
     GOLD {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+      @Override
+      public String toString() {
+        return "Gold";
+      }
     },
     ESTATE {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+      @Override
+      public String toString() {
+        return "Estate";
+      }
     },
     DUCHY {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+      @Override
+      public String toString() {
+        return "Duchy";
+      }
     },
     PROVINCE {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {}
+      @Override
+      public String toString() {
+        return "Province";
+      }
     },
 
     CELLAR {
@@ -121,6 +215,10 @@ public class Card {
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
 
       }
+      @Override
+      public String toString() {
+        return "Cellar";
+      }
     },
     MOAT {
       @Override
@@ -132,6 +230,10 @@ public class Card {
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+      }
+      @Override
+      public String toString() {
+        return "Moat";
       }
     },
 
@@ -154,6 +256,10 @@ public class Card {
         int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower();
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuyingPower(buyingPower + 1);
       }
+      @Override
+      public String toString() {
+        return "Market";
+      }
     },
 
     MERCHANT {
@@ -171,6 +277,10 @@ public class Card {
         //TODO add gold when playing silver
 
       }
+      @Override
+      public String toString() {
+        return "Merchant";
+      }
     },
     MILITIA {
       @Override
@@ -181,6 +291,10 @@ public class Card {
 
         int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower();
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuyingPower(buyingPower + 2);
+      }
+      @Override
+      public String toString() {
+        return "Militia";
       }
     },
 
@@ -197,6 +311,10 @@ public class Card {
 
         //TODO Gain a Treasure to your hand costing up to 3 more than it
       }
+      @Override
+      public String toString() {
+        return "Mine";
+      }
     },
 
     REMODEL {
@@ -212,6 +330,10 @@ public class Card {
         //TODO Gain a card costing up to 2 more gold than the one you trashed.
 
       }
+      @Override
+      public String toString() {
+        return "Remodel";
+      }
     },
 
     SMITHY {
@@ -225,6 +347,10 @@ public class Card {
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+      }
+      @Override
+      public String toString() {
+        return "Smithy";
       }
     },
 
@@ -241,6 +367,10 @@ public class Card {
 
 
       }
+      @Override
+      public String toString() {
+        return "Village";
+      }
     },
     WORKSHOP {
       @Override
@@ -252,9 +382,16 @@ public class Card {
 
         //TODO Gain card costing up to 4 gold
       }
+      @Override
+      public String toString() {
+        return "Workshop";
+      }
     };
+
 
     public abstract void play(GameStateInfo gameStateInfo,
         List<Card> additionalCards);
+
   }
+
 }

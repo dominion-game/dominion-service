@@ -28,14 +28,14 @@ public class PlayController {
 
   Logger logger = LoggerFactory.getLogger(PlayController.class);
 
-   @PostMapping("/{cardid}/action")
-  public GameStateInfo playCard(@PathVariable long gameId, int playerId, int cardId){
-     return gameLogic.playCard(cardId, gameId, playerId);
-  }
   @PostMapping("/{cardid}/action")
-  public GameStateInfo playCardWithBody(@PathVariable long gameId, int playerId, int cardId,
+  public GameStateInfo playCard(@PathVariable long gameId, int playerId, int cardId,
       @RequestBody ArrayList<Card> cards){
-    return gameLogic.playCardWithCards(cardId, gameId, playerId, cards);
+    if (cards == null){
+      return gameLogic.playCardWithCards(cardId, gameId, playerId, null);
+    }else {
+      return gameLogic.playCardWithCards(cardId, gameId, playerId, cards);
+    }
   }
 
   @PostMapping("{cardid}/buy")

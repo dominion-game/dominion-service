@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
-import edu.cnm.deepdive.dominionservice.model.pojo.Hand;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -13,14 +12,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 /**
@@ -162,6 +158,9 @@ public class Turn {
     this.plays = plays;
   }
 
+  public void addGoldIfSilver() {
+    //TODO needs implementation
+  }
 
 
   public enum TurnState {
