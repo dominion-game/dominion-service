@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -26,10 +27,10 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 @Table
-public class Turn {
+public class Turn implements Serializable {
 
   public Turn(Game game, Player player) {
-    this.player = player;
+    this.playerId = player.getId();
     this.buysRemaining = 1;
     this.actionsRemaining = 1;
     this.game = game;
@@ -45,18 +46,24 @@ public class Turn {
   /**
    * Foreign Key playerId, refers to the player who took this turn.
    */
-  @NonNull
-  @ManyToOne(fetch = FetchType.EAGER, optional = false)
-  @JoinColumn(name = "player_id", nullable = false, updatable = false)
-  private Player player;
 
-  @Column
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "game_id", nullable = false, updatable = false)
   private Game game;
 
   @Column
   private int buyingPower;
+
+  @Column
+  private long playerId;
+
+  public long getPlayerId() {
+    return playerId;
+  }
+
+  public void setPlayerId(long playerId) {
+    this.playerId = playerId;
+  }
 
   /**
    * Buys Remaining- a counter that iterates down to zero. When it returns zero, a method is
@@ -78,7 +85,7 @@ public class Turn {
   /**
    * Includes a list of plays per turn.
    */
-  @OneToMany(mappedBy = "turn_id", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderBy("play_id ASC")
   private List<Play> plays = new LinkedList<>();
 
@@ -102,13 +109,6 @@ public class Turn {
   }
 
 
-  public Player getPlayer() {
-    return player;
-  }
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
 
   public int getBuysRemaining() {
     return buysRemaining;

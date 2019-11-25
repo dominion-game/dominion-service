@@ -5,13 +5,13 @@ import edu.cnm.deepdive.dominionservice.model.dao.PlayerRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.StackRepository;
 import edu.cnm.deepdive.dominionservice.model.dao.TurnRepository;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
-import edu.cnm.deepdive.dominionservice.model.entity.Play;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Stack;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.state.State;
 
@@ -93,7 +93,7 @@ public class GameStateInfo implements Serializable {
       List<Turn> previousTurns) {
     this.previousTurns = previousTurns;
   }
-  public Player getCurrentPlayer() {
+  public Optional<Player> getCurrentPlayer() {
     return playerRepository.findPlayerById(currentPlayerId);
   }
 
@@ -101,7 +101,7 @@ public class GameStateInfo implements Serializable {
     this.currentPlayerId = playerId;
   }
 
-  public List<Play> saveAll() {
+  public void saveAll() {
     playerStateInfoPlayer2.saveAll();
     playerStateInfoPlayer1.saveAll();
     for (Stack stack: stacks){
@@ -150,8 +150,8 @@ public class GameStateInfo implements Serializable {
       return symbols[ordinal()];
     }
   }
-   public void currentPlayerDraws(){
-     getCurrentPlayer().drawCard();
-  }
+   //public void currentPlayerDraws(){
+   //  getCurrentPlayer().drawCard();
+ // }
 
 }

@@ -2,14 +2,17 @@ package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dao.CardRepository;
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
-import edu.cnm.deepdive.dominionservice.model.entity.Location;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
@@ -20,10 +23,10 @@ public class Hand {
   @Autowired
   private CardRepository cardRepository;
 
-  private List<Card> cardsInHand;
+  private ArrayList<Card> cardsInHand;
 
 
-  public Hand(List<Card> cardsInHand) {
+  public Hand(ArrayList cardsInHand) {
     this.cardsInHand = cardsInHand;
   }
 
@@ -41,7 +44,20 @@ public class Hand {
   @JoinColumn(name="game_id", nullable = false, updatable = false)
   private Game game;
 
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+  @ElementCollection(targetClass=Card.class)
+  private List<Card> cards;
 
+  public void discardFromHand(List<Card> cards){
+    for (int i =0; i<cards.size(); i++){
+      for (int j=0; j<cardsInHand.size(); j++){
+        if (cards.get(i).getCardType().equals(cardsInHand.get(j).getCardType())){
+          cardsInHand.remove(cardsInHand.get(j));
+          j=cardsInHand.size();
+        }
+      }
+    }
+  }
 
 
   public List<Card> draw(DrawPile drawPile, GameStateInfo gameStateInfo){
@@ -68,11 +84,6 @@ public class Hand {
     return cardsInHand;
   }
 
-  public void setCardsInHand(
-      List<Card> cardsInHand) {
-    this.cardsInHand = cardsInHand;
-  }
-
   public int getId() {
     return id;
   }
@@ -97,5 +108,14 @@ public class Hand {
 
   public void setGame(@NonNull Game game) {
     this.game = game;
+  }
+
+
+  public List<Card> getCards() {
+    return cards;
+  }
+
+  public void setCards(List<Card> cards) {
+    this.cards = cards;
   }
 }

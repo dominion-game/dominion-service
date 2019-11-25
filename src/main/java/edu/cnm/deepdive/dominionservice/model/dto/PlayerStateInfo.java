@@ -40,7 +40,7 @@ public class PlayerStateInfo implements Serializable {
   PlayerStateInfo(Game game, Player player) {
     this.game=game;
     this.player=player;
-    this.turn = turnRepository.getCurrentTurn();
+    this.turn = turnRepository.getCurrentTurn().get();
       this.hand = handRepository.getLastByPlayer(player);
       this.discardPile = discardPileRepository.getLastByPlayer(player);
       this.drawPile = drawPileRepository.getLastByPlayer(player);

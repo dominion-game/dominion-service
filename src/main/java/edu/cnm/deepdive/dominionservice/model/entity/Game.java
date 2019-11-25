@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,7 +16,7 @@ import javax.persistence.OneToMany;
  * track of stacks determining end of game
  */
 @Entity
-public class Game {
+public class Game implements Serializable {
 
   /**
    * Creates the primary Game Id.
@@ -29,14 +30,14 @@ public class Game {
    * Returns a list of stacks. This list documents all of the stacks available to the players. It
    * will be updated throughout the game as players pull cards for the stacks.
    */
-  @OneToMany(mappedBy = "stack", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
   private List<Stack> stacks = new LinkedList<>();
 
   /**
    * Returns a list of Players. This allows for keeping track of players, turns, and points
    * throughout the game.
    */
-  @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
   private List<Player> players = new LinkedList<>();
 
   /**

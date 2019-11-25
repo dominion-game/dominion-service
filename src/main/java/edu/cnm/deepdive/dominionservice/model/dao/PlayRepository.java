@@ -4,23 +4,22 @@ import edu.cnm.deepdive.dominionservice.model.entity.Play;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlayRepository extends CrudRepository<Play,Long> {
+public interface PlayRepository extends JpaRepository<Play,Long> {
 
-  List<Play> save(Play play);
+  public <S extends Play> Iterable<S> save(Play... plays);
 
-  Play findPlayByTurn(Turn turn);
+  <S extends Play> Iterable<S> findPlayByTurn(Turn turn);
 
-  List<Play> getAllByTurn(Turn turn);
+  Iterable<Play> getAllByTurn(Turn turn);
 
   @Override
   void deleteAll();
 
-  @Override
-  <S extends Play> Iterable<S> saveAll(Iterable<S> iterable);
 
   @Override
   Optional<Play> findById(Long aLong);
@@ -28,11 +27,6 @@ public interface PlayRepository extends CrudRepository<Play,Long> {
   @Override
   boolean existsById(Long aLong);
 
-  @Override
-  Iterable<Play> findAll();
-
-  @Override
-  Iterable<Play> findAllById(Iterable<Long> iterable);
 
   @Override
   long count();

@@ -1,8 +1,8 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
-import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 
 @Entity
 public class DiscardPile {
@@ -88,5 +87,10 @@ public class DiscardPile {
 
   public void setGame(@NonNull Game game) {
     this.game = game;
+  }
+
+  public ArrayList<Card> addToDiscard(List<Card> additionalCards) {
+    this.discardCards.addAll(additionalCards);
+    return this.discardCards;
   }
 }

@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ import org.springframework.lang.NonNull;
  * The type Player.
  */
 @Entity
-public class Player {
+public class Player implements Serializable {
   @Id
   @GeneratedValue
   @Column(name = "player_id", updatable = false, nullable = false)
@@ -37,10 +38,10 @@ public class Player {
 
   private List<Card> playerHand;
 
-  @OneToMany(mappedBy="turn", cascade=CascadeType.ALL)
-  private ArrayList<Turn> turns = new ArrayList<>();
 
 
+private int numAction;
+private int numBuy;
 
   private int extraGoldIfSilver;
 
@@ -77,8 +78,7 @@ public class Player {
    *
    * @param whoseTurn the whose turn
    */
-  public void setWhoseTurn(long whoseTurn) {
-    this.whoseTurn = (int) whoseTurn;}
+
 
   public void setId(Long id) {
     this.id = id;
@@ -88,17 +88,6 @@ public class Player {
     this.game = game;
   }
 
-  public void setWhoseTurn(int whoseTurn) {
-    this.whoseTurn = whoseTurn;
-  }
-
-  public List<Turn> getTurns() {
-    return turns;
-  }
-
-  public void setTurns(ArrayList<Turn> turns) {
-    this.turns = turns;
-  }
 
 
   public PlayerState getPlayerState() {
@@ -148,9 +137,7 @@ public class Player {
    *
    * @return the whose turn
    */
-  public int getWhoseTurn() {
-    return whoseTurn;
-  }
+
 
   /**
    * public List<Card> getDeck() { return deck; } public List<Card> getDiscard() { return discard; }
@@ -204,8 +191,6 @@ public class Player {
    MILITIA_RESPONSE,
    ACTION;
 
-   public DiscardPile getDiscardPile() {
-   }
  }
 
 //  public static class Hand {

@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +21,7 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 @Table
-public class Play {
+public class Play implements Serializable {
 
   /**
    * Each action taken by a player generates a new play. Typically, most of the fields will be null

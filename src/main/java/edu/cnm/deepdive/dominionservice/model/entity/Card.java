@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,7 @@ import javax.persistence.ManyToOne;
 import org.springframework.lang.NonNull;
 
 @Entity
-public class Card {
+public class Card implements Serializable {
 //  private final CardRepository cardRepository;
 
   public Card(String cardName, CardType cardType, int cost) {
@@ -42,6 +43,7 @@ public class Card {
   @NonNull
   @Column(name = "card_type", updatable = false, nullable = false)
   private CardType cardType;
+
 
   @Column
   private int index;
@@ -199,13 +201,16 @@ public class Card {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {
+        Hand currentHand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
+        currentHand.discardFromHand(additionalCards);
+         gameStateInfo.getCurrentPlayerStateInfo().getDiscardPile().addToDiscard(additionalCards);
+        gameStateInfo.getCurrentPlayerStateInfo().setHand(currentHand);
         //discard any number of cards from hand, redraw that many cards
         // need to select which cards to be deleted
-
         int numDiscarded = additionalCards.size();
-        for (int i = 0; i < numDiscarded; i++) {
-          gameStateInfo.getCurrentPlayerStateInfo(.additionalCards.get(i));
-        }
+        //for (int i = 0; i < numDiscarded; i++) {
+         // gameStateInfo.getCurrentPlayerStateInfo(.additionalCards.get(i));
+        //}
         for (int i = 0; i < numDiscarded; i++) {
           DrawPile drawPile = gameStateInfo.getCurrentPlayerStateInfo().getDrawPile();
           Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
@@ -303,8 +308,8 @@ public class Card {
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {
         //TODO make sure additional cards has a card in it (how to hand error state)
-        gameStateInfo.trashCard(additionalCards.get(0));
-        gameStateInfo.getTreasure();
+        //gameStateInfo.trashCard(additionalCards.get(0));
+       // gameStateInfo.getTreasure();
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
@@ -322,7 +327,7 @@ public class Card {
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {
         //TODO make sure additional cards has a card in it (how to hand error state)
-        gameStateInfo.trashCard(additionalCards.get(0));
+        //gameStateInfo.trashCard(additionalCards.get(0));
 
         int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);

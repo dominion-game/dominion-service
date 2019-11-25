@@ -3,17 +3,17 @@ import edu.cnm.deepdive.dominionservice.model.entity.Stack;
 import edu.cnm.deepdive.dominionservice.model.entity.Stack.StackType;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StackRepository extends CrudRepository<Stack,Long> {
+public interface StackRepository extends JpaRepository<Stack,Long> {
 
-  List<Stack> save(Stack stack);
+  Stack save(Stack stack);
 
   List<Stack> getAllByGame_Id();
 
-  List<Stack> findStackByStackType(StackType stackType);
 
   List<StackType> getAllByStackType();
 
@@ -25,19 +25,12 @@ public interface StackRepository extends CrudRepository<Stack,Long> {
 
   int getCountByStackType();
 
-  int findAllByGameAndStackCountIsZero();
-
   List<Stack> getAllByGameId(long gameId);
 
-  <S extends Stack> Iterable<S> saveAll(Iterable<S> iterable);
 
   Optional<Stack> findById(Long aLong);
 
   boolean existsById(Long aLong);
-
-  Iterable<Stack> findAll();
-
-  Iterable<Stack> findAllById(Iterable<Long> iterable);
 
   long count();
 

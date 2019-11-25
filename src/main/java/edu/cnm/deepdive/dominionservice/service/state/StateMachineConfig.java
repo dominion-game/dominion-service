@@ -5,6 +5,7 @@ import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -140,7 +141,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
     return new NewTurnAction() {
       @Override
       public void execute(StateContext<States, Events> stateContext) {
-        Player player = playerRepository.findPlayerById((long) 1);
+        Optional<Player> player = playerRepository.findPlayerById((long) 1);
         gameLogic.startTurn(player);
         super.execute(stateContext);
 
@@ -154,7 +155,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
     return new NewTurnAction() {
       @Override
       public void execute(StateContext<States, Events> stateContext) {
-        Player player = playerRepository.findPlayerById((long) 2);
+        Optional<Player> player = playerRepository.findPlayerById((long) 2);
         gameLogic.startTurn(player);
         super.execute(stateContext);
 
@@ -218,9 +219,5 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
     }
   }
 
-  @Bean
-  public GameLogic gameLogic() {
-    return new GameLogic();
-  }
 
 }

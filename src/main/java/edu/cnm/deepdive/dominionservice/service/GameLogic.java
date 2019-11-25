@@ -12,7 +12,6 @@ import edu.cnm.deepdive.dominionservice.model.dto.PlayerStateInfo.PhaseState;
 import edu.cnm.deepdive.dominionservice.model.entity.Card;
 import edu.cnm.deepdive.dominionservice.model.entity.Card.CardType;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
-import edu.cnm.deepdive.dominionservice.model.entity.Play;
 import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.entity.Player.PlayerState;
 import edu.cnm.deepdive.dominionservice.model.entity.Stack;
@@ -21,6 +20,7 @@ import edu.cnm.deepdive.dominionservice.model.enums.States;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -64,7 +64,7 @@ public class GameLogic {
 
   public GameStateInfo playCardWithCards(int cardId, long gameId, int playerId, ArrayList<Card> cards) {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
-    Card playingCard = new Card(cardRepository.getCardTypeById(cardId));
+    Card playingCard = new Card(cardRepository.getCardTypeById(cardId).get());
     playingCard.getCardType().play(gameStateInfo, cards);
     if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
       endActions(gameStateInfo);
@@ -86,7 +86,7 @@ public class GameLogic {
         currentGameState.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
         break;
       case DOING_BUYS:
-        endTurn(gameRepository.getGameById(gameId), currentGameState.getCurrentPlayer());
+        endTurn(gameRepository.getGameById(gameId), currentGameState.getCurrentPlayer().get());
         currentGameState.getCurrentPlayerStateInfo().setPhaseState(PhaseState.PASSIVE);
         break;
     }
@@ -120,7 +120,7 @@ public class GameLogic {
     Card buyCard = new Card(cardType);
     int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower() - buyCard.getCost();
     if (buyingPower < 0){
-      endTurn(gameRepository.getGameById(gameId), playerRepository.getPlayerById(playerId));
+      endTurn(gameRepository.getGameById(gameId), playerRepository.getPlayerById(playerId).get());
     }else{
       gameStateInfo.getCurrentPlayerStateInfo().getDiscardPile().addToDiscard(buyCard);
       switch(cardType){
@@ -136,7 +136,7 @@ public class GameLogic {
       if(buysRemaining <=0){
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuysRemaining(buysRemaining);
         gameStateInfo.saveAll();
-        endTurn(this.game, gameStateInfo.getCurrentPlayer());
+        endTurn(this.game, gameStateInfo.getCurrentPlayer().get());
         return gameStateInfo;
       }else {
         gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuysRemaining(buysRemaining);
@@ -175,12 +175,12 @@ public class GameLogic {
   }
 
 
-  public void startTurn(Player player){
-    if (player.getId() == 1) {
-      initTurn(player);
+  public void startTurn(Optional<Player> player){
+    if (player.get().getId() == 1) {
+      initTurn(player.get());
       signalMachine(Events.PLAYER_1_START);
     }else{
-      initTurn(player);
+      initTurn(player.get());
       signalMachine(Events.PLAYER_2_START);
     }
   }
@@ -190,26 +190,26 @@ public class GameLogic {
     turnRepository.save(thisTurn);
     GameStateInfo gameStateInfo = new GameStateInfo(game);
     if(gameStateInfo.getPreviousTurns().get(thisTurn.getId()-1).isDidAttack()){
-      gameStateInfo.getCurrentPlayer().setPlayerState(PlayerState.MILITIA_RESPONSE);
+      gameStateInfo.getCurrentPlayer().get().setPlayerState(PlayerState.MILITIA_RESPONSE);
     }else {
-      gameStateInfo.getCurrentPlayer().setPlayerState(PlayerState.ACTION);
+      gameStateInfo.getCurrentPlayer().get().setPlayerState(PlayerState.ACTION);
     }
     gameStateInfo.saveAll();
   }
   public void endDiscarding(GameStateInfo gameStateInfo){
-    gameStateInfo.getCurrentPlayer().setPlayerState(PlayerState.ACTION);
+    gameStateInfo.getCurrentPlayer().get().setPlayerState(PlayerState.ACTION);
     gameStateInfo.saveAll();
   }
   public void endActions(GameStateInfo gameStateInfo){
-    gameStateInfo.getCurrentPlayer().setPlayerState(PlayerState.BUYING);
+    gameStateInfo.getCurrentPlayer().get().setPlayerState(PlayerState.BUYING);
     gameStateInfo.getCurrentPlayerStateInfo().calculateBuyingPower();
     gameStateInfo.saveAll();
   }
 
   public void endTurn(Game game, Player player){
     GameStateInfo gameStateInfo = new GameStateInfo(game);
-    gameStateInfo.getCurrentPlayer().setPlayerState(PlayerState.WATCHING);
-    if (gameStateInfo.getCurrentPlayer().getId() == 1) {
+    gameStateInfo.getCurrentPlayer().get().setPlayerState(PlayerState.WATCHING);
+    if (gameStateInfo.getCurrentPlayer().get().getId() == 1) {
       signalMachine(Events.PLAYER_1_END);
     }else{
       signalMachine(Events.PLAYER_2_END);
@@ -217,8 +217,8 @@ public class GameLogic {
     gameStateInfo.saveAll();
     //TODO update other player
   }
-  public List<Play> updateOtherPlayer(){
-    return playRepository.getAllByTurn(turnRepository.getCurrentTurn());
+  public List updateOtherPlayer(){
+    return (List) playRepository.getAllByTurn(turnRepository.getCurrentTurn().get());
   }
 
   public void endGame(){

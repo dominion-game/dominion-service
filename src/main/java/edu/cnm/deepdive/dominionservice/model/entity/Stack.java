@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +20,10 @@ import org.springframework.lang.NonNull;
  */
 @Entity
 @Table(
-    indexes = {@Index(columnList = "stackType"),
-        @Index(columnList = "stackCount")}
+    indexes = {@Index(columnList = "stack_type"),
+        @Index(columnList = "stack_count")}
 )
-public class Stack {
+public class Stack implements Serializable {
 
   /**
    * Generates primary key id.
@@ -308,7 +309,7 @@ public class Stack {
       return stackType.getSymbol();
     }
 
-    private String getSymbol() {
+    public String getSymbol() {
       return symbols[ordinal()];
     }
 
