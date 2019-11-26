@@ -15,16 +15,16 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 
-@EnableStateMachineFactory
-@EnableStateMachine
+
 @SpringBootApplication
 @EnableWebSecurity
 public class DominionServiceApplication extends ResourceServerConfigurerAdapter
     implements CommandLineRunner{
-  private final StateMachine<States, Events> stateMachine;
+
+  private StateMachine<States, Events> stateMachine;
   //private static Logger logger = LoggingUtils.LOGGER;
 
-@Autowired
+
   public DominionServiceApplication(
       StateMachine<States, Events> stateMachine) {
     this.stateMachine = stateMachine;
@@ -35,12 +35,19 @@ public class DominionServiceApplication extends ResourceServerConfigurerAdapter
   }
 
 
+
   @Override
   public void run(String... args) throws Exception {
-
+    stateMachine.sendEvent(Events.BEGIN_GAME);
+    stateMachine.sendEvent(Events.PLAYER_1_START);
+    stateMachine.sendEvent(Events.PLAYER_1_END);
+    stateMachine.sendEvent(Events.PLAYER_2_START);
+    stateMachine.sendEvent(Events.PLAYER_2_END);
+    stateMachine.sendEvent(Events.RETURN_TO_LOBBY);
   }
-  @Value("${oauth.clientId}")
-  private String clientId;
+
+  //@Value("${oauth.clientId}")
+ // private String clientId;
 
   @Override
   public void configure(HttpSecurity http) throws Exception {

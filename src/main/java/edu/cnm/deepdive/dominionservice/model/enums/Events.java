@@ -14,5 +14,12 @@ public enum Events {
   PLAYER_1_END,
   PLAYER_2_START,
   PLAYER_2_END;
-
+  public static Events getByName(String name) {
+    for (Events event : Events.values()) {
+      if (event.name().equals(name)) {
+        return event;
+      }
+    }
+    return null;
+  }
 }

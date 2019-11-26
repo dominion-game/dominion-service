@@ -12,18 +12,14 @@ public interface StackRepository extends JpaRepository<Stack,Long> {
 
   Stack save(Stack stack);
 
-  List<Stack> getAllByGame_Id();
 
 
-  List<StackType> getAllByStackType();
 
-  List<Integer> getAllByStackCount();
 
   void delete(Stack stack);
 
   void deleteAll();
 
-  int getCountByStackType();
 
   List<Stack> getAllByGameId(long gameId);
 

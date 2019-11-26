@@ -36,7 +36,7 @@ public class Player implements Serializable {
 
   private int extraGold;
 
-  private List<Card> playerHand;
+
 
 
 
@@ -176,13 +176,6 @@ private int numBuy;
     this.numBuy = numBuy;
   }
 
-  public List<Card> getPlayerHand() {
-    return playerHand;
-  }
-
-  public void setPlayerHand(List<Card> playerHand) {
-    this.playerHand = playerHand;
-  }
  public enum PlayerState{
    MY_TURN,
    WATCHING,

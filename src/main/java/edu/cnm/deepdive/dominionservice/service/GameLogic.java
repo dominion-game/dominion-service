@@ -40,6 +40,7 @@ public class GameLogic {
 
   private StateMachine<States, Events> stateMachine;
 
+
   @Autowired
   GameRepository gameRepository;
 
@@ -66,7 +67,7 @@ public class GameLogic {
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card playingCard = new Card(cardRepository.getCardTypeById(cardId).get());
     playingCard.getCardType().play(gameStateInfo, cards);
-    if(gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining()==0){
+    if(gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining()==0){
       endActions(gameStateInfo);
       gameStateInfo.getCurrentPlayerStateInfo().setPhaseState(PhaseState.DOING_BUYS);
     }
@@ -107,18 +108,19 @@ public class GameLogic {
     //TODO modify to bring in lobby, Oauth credentials, etc
     playerRepository.save(new Player());
     signalMachine(Events.BEGIN_GAME);
-    ArrayList<Stack> allStacks = new ArrayList(stackRepository.getAllByStackType());
-    for (Stack stack : allStacks){
-      stack.setStackCount(stack.getStackType().getInitialCardAmounts());
-      stackRepository.save(stack);
+    String[] allStacks = new String[]{"Bronze", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Moat",
+        "Village",
+        "Workshop", "Smithy", "Remodel", "Militia", "Market", "Mine", "Merchant", "Trash"};
+    int[] initialStacks = new int[]{20, 10, 10, 20, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+     // stackRepository.save(stack);
     }
 
-  }
+
 
   public GameStateInfo buyTarget(CardType cardType, int playerId, int gameId){
     GameStateInfo gameStateInfo = new GameStateInfo(gameRepository.getGameById(gameId));
     Card buyCard = new Card(cardType);
-    int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower() - buyCard.getCost();
+    int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getBuyingPower() - buyCard.getCost();
     if (buyingPower < 0){
       endTurn(gameRepository.getGameById(gameId), playerRepository.getPlayerById(playerId).get());
     }else{
@@ -132,14 +134,14 @@ public class GameLogic {
         default:
           break;
       }
-      int buysRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuysRemaining()-1;
+      int buysRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getBuysRemaining()-1;
       if(buysRemaining <=0){
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuysRemaining(buysRemaining);
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setBuysRemaining(buysRemaining);
         gameStateInfo.saveAll();
         endTurn(this.game, gameStateInfo.getCurrentPlayer().get());
         return gameStateInfo;
       }else {
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuysRemaining(buysRemaining);
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setBuysRemaining(buysRemaining);
         gameStateInfo.saveAll();
         return gameStateInfo;
       }
@@ -218,7 +220,9 @@ public class GameLogic {
     //TODO update other player
   }
   public List updateOtherPlayer(){
-    return (List) playRepository.getAllByTurn(turnRepository.getCurrentTurn().get());
+    ArrayList<Turn> allTurns = turnRepository.getAllByOrderByIdDesc();
+    Turn lastTurn = allTurns.get(allTurns.size()-2);
+    return (List) playRepository.getAllByTurn(lastTurn);
   }
 
   public void endGame(){

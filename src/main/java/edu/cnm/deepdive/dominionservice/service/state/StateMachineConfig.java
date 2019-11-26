@@ -5,7 +5,10 @@ import edu.cnm.deepdive.dominionservice.model.entity.Player;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic;
+import java.util.EnumSet;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -13,24 +16,65 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
+import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
 public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States, Events> {
-
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   @Autowired
   private GameLogic gameLogic;
 
   @Autowired
   private PlayerRepository playerRepository;
+
+  @Bean
+  public StateMachine<States, Events> stateMachine() throws Exception {
+    StateMachineBuilder.Builder<States, Events> builder = StateMachineBuilder.builder();
+
+    builder.configureStates()
+        .withStates()
+        .initial(States.INITIAL)
+        .end(States.GAME_END)
+        .states(EnumSet.allOf(States.class));
+
+    builder.configureTransitions()
+        .withExternal()
+        .source(States.INITIAL).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
+        .and()
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START)
+        .action(newTurnActionPlayer1())
+        .and()
+        .withExternal()
+        .source(States.PLAYER_1_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_1_END)
+        .and()
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.PLAYER_2_TURN).event(Events.PLAYER_2_START)
+        .action(newTurnActionPlayer2())
+        .and()
+        .withExternal()
+        .source(States.PLAYER_2_TURN).target(States.GAME_PLAYING).event(Events.PLAYER_2_END)
+        .and()
+        .withExternal()
+        .source(States.GAME_PLAYING).target(States.GAME_END).event(Events.GAME_FINISHES)
+        .and()
+        .withExternal()
+        .source(States.GAME_END).target(States.INITIAL).event(Events.RETURN_TO_LOBBY);
+
+
+    StateMachine<States, Events> stateMachine = builder.build();
+   // stateMachine.addStateListener(listener);
+    return stateMachine;
+  }
 
   @Override
   public void configure(StateMachineConfigurationConfigurer<States, Events> config)
@@ -47,8 +91,8 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
       throws Exception {
 
     states
-        .withStates()
-        .state(States.GAME_PLAYING)
+       /** .withStates()
+        .state(States.INITIAL)
         .and()
         .withStates()
         .parent(States.GAME_PLAYING)
@@ -69,7 +113,12 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .initial(States.PLAYER_1_TURN)
         .state(States.PLAYER_1_TURN)
         .state(States.PLAYER_2_TURN);
+*/
 
+            .withStates()
+        .initial(States.INITIAL)
+        .end(States.GAME_END)
+        .states(EnumSet.allOf(States.class));
   }
 
   @Override
@@ -79,14 +128,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
     transitions
         .withExternal()
-        .source(States.IDLE).target(States.GAME_SETUP).event(Events.GAME_INTIALIZED)
-        .and()
-        .withExternal()
-        .source(States.GAME_SETUP).target(States.GAME_START).event(Events.GAME_STARTS)
-        .and()
-        .withExternal()
-        .source(States.GAME_START).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
-        .action(gameSetupAction())
+        .source(States.INITIAL).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
         .and()
         .withExternal()
         .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START)
@@ -106,7 +148,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         .source(States.GAME_PLAYING).target(States.GAME_END).event(Events.GAME_FINISHES)
         .and()
         .withExternal()
-        .source(States.GAME_END).target(States.IDLE).event(Events.RETURN_TO_LOBBY);
+        .source(States.GAME_END).target(States.INITIAL).event(Events.RETURN_TO_LOBBY);
 
   }
 
@@ -123,15 +165,7 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
 
   //LOGGING FOR THE TIME BEING, WILL PROBABLY BE UNNCESSARY IN PRODUCTION
-  @Bean
-  public StateMachineListenerAdapter<States, Events> listener() {
-    return new StateMachineListenerAdapter<States, Events>() {
-      @Override
-      public void stateChanged(State<States, Events> from, State<States, Events> to) {
-        System.out.println("State change to " + to.toString());
-      }
-    };
-  }
+
 
 
   //TURN START AND END METHODS, GAME START AND CLEANUP METHODS INCLUDING VICTORY,
@@ -146,6 +180,15 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
         super.execute(stateContext);
 
         //turn entry actions
+      }
+    };
+  }
+  @Bean
+  public StateMachineListener<States, Events> listener() {
+    return new StateMachineListener<States, Events>() {
+      @Override
+      public void stateChanged(State from, State to) {
+        logger.info("State change to " + to.getId());
       }
     };
   }

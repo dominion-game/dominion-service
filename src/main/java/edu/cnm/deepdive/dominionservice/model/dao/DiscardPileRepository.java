@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 
-public interface DiscardPileRepository extends CrudRepository {
+public interface DiscardPileRepository extends CrudRepository<DiscardPile, Integer> {
 
-  ArrayList<DrawPile> getAllByGameOrderByPlayer(Game game);
 
   DiscardPile getLastByPlayer(Player player);
 

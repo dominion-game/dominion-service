@@ -9,6 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 /**
@@ -16,7 +20,19 @@ import javax.persistence.OneToMany;
  * track of stacks determining end of game
  */
 @Entity
+@Data
+@AllArgsConstructor
+@DynamicUpdate
 public class Game implements Serializable {
+
+  public Game(List<Stack> stacks,
+      List<Player> players) {
+    this.stacks = stacks;
+    this.players = players;
+  }
+
+  public Game() {
+  }
 
   /**
    * Creates the primary Game Id.

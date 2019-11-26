@@ -14,7 +14,8 @@ import org.springframework.lang.NonNull;
 
 @Entity
 public class Card implements Serializable {
-//  private final CardRepository cardRepository;
+
+
 
   public Card(String cardName, CardType cardType, int cost) {
     this.cardName = cardName;
@@ -36,10 +37,9 @@ public class Card implements Serializable {
 
     @Id
     @GeneratedValue
-     @Column(name = "card_id", updatable = false, nullable = false)
+     @Column(name = "id", updatable = false, nullable = false)
      private int id;
 
-  @Id
   @NonNull
   @Column(name = "card_type", updatable = false, nullable = false)
   private CardType cardType;
@@ -216,8 +216,8 @@ public class Card implements Serializable {
           Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
           hand.draw(drawPile,gameStateInfo, 1);
         }
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining + 1);
 
       }
       @Override
@@ -233,8 +233,8 @@ public class Card implements Serializable {
         Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
         hand.draw(drawPile,gameStateInfo, 2);
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
       }
       @Override
       public String toString() {
@@ -250,16 +250,16 @@ public class Card implements Serializable {
         Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
         hand.draw(drawPile,gameStateInfo, 1);
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining + 1);
 
         //  playerInfo.addBuy();
-        int buysRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuysRemaining();
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuysRemaining(buysRemaining + 1);
+        int buysRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getBuysRemaining();
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setBuysRemaining(buysRemaining + 1);
 
         //  playerInfo.addBuyingPower();\
-        int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower();
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuyingPower(buyingPower + 1);
+        int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getBuyingPower();
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setBuyingPower(buyingPower + 1);
       }
       @Override
       public String toString() {
@@ -275,10 +275,10 @@ public class Card implements Serializable {
         Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
         hand.draw(drawPile,gameStateInfo, 1);
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 1);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining + 1);
 
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().addGoldIfSilver();
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().addGoldIfSilver();
         //TODO add gold when playing silver
 
       }
@@ -291,11 +291,11 @@ public class Card implements Serializable {
       @Override
       public void play(GameStateInfo gameStateInfo,
           List<Card> additionalCards) {
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
 
-        int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getBuyingPower();
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setBuyingPower(buyingPower + 2);
+        int buyingPower = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getBuyingPower();
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setBuyingPower(buyingPower + 2);
       }
       @Override
       public String toString() {
@@ -311,8 +311,8 @@ public class Card implements Serializable {
         //gameStateInfo.trashCard(additionalCards.get(0));
        // gameStateInfo.getTreasure();
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
 
         //TODO Gain a Treasure to your hand costing up to 3 more than it
       }
@@ -329,8 +329,8 @@ public class Card implements Serializable {
         //TODO make sure additional cards has a card in it (how to hand error state)
         //gameStateInfo.trashCard(additionalCards.get(0));
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
 
         //TODO Gain a card costing up to 2 more gold than the one you trashed.
 
@@ -350,8 +350,8 @@ public class Card implements Serializable {
         hand.draw(drawPile,gameStateInfo, 3); // How many cards????
         gameStateInfo.getCurrentPlayerStateInfo().setHand(hand);
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
       }
       @Override
       public String toString() {
@@ -367,8 +367,8 @@ public class Card implements Serializable {
         Hand hand = gameStateInfo.getCurrentPlayerStateInfo().getHand();
         hand.draw(drawPile,gameStateInfo, 1);
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining + 2);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining + 2);
 
 
       }
@@ -382,8 +382,8 @@ public class Card implements Serializable {
       public void play(GameStateInfo gameStateInfo, List<Card> additionalCards) {
 
 
-        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getTurn().getActionsRemaining() - 1;
-        gameStateInfo.getCurrentPlayerStateInfo().getTurn().setActionsRemaining(actionsRemaining);
+        int actionsRemaining = gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().getActionsRemaining() - 1;
+        gameStateInfo.getCurrentPlayerStateInfo().getThisTurn().setActionsRemaining(actionsRemaining);
 
         //TODO Gain card costing up to 4 gold
       }

@@ -20,8 +20,7 @@ import org.springframework.lang.NonNull;
 public class Hand {
 
 
-  @Autowired
-  private CardRepository cardRepository;
+
 
   private ArrayList<Card> cardsInHand;
 
@@ -72,13 +71,7 @@ public class Hand {
     return cardsInHand;
   }
 
-  public CardRepository getCardRepository() {
-    return cardRepository;
-  }
 
-  public void setCardRepository(CardRepository cardRepository) {
-    this.cardRepository = cardRepository;
-  }
 
   public List<Card> getCardsInHand() {
     return cardsInHand;

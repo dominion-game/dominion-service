@@ -13,9 +13,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HandRepository extends JpaRepository<Card, Integer> {
+public interface HandRepository extends JpaRepository<Hand, Integer> {
 
-  ArrayList<Hand> getAllByGameOrderByPlayer(Game game);
   //TODO make this work- I dont know the exact query language for this
   Hand getLastByPlayer(Player player);
 

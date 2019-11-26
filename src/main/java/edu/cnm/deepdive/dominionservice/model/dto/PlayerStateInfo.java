@@ -26,7 +26,7 @@ public class PlayerStateInfo implements Serializable {
 
 
       private PlayerRepository playerRepository;
-  private Turn turn;
+  private Turn thisTurn;
   private Player player;
   private Game game;
   private DrawPile drawPile;
@@ -36,18 +36,21 @@ public class PlayerStateInfo implements Serializable {
   private HandRepository handRepository;
   private DrawPileRepository drawPileRepository;
   private DiscardPileRepository discardPileRepository;
+  ArrayList<Turn> allTurns;
+
 
   PlayerStateInfo(Game game, Player player) {
     this.game=game;
     this.player=player;
-    this.turn = turnRepository.getCurrentTurn().get();
+    allTurns = turnRepository.getAllByOrderByIdDesc();
+    this.thisTurn = allTurns.get(allTurns.size()-1);
       this.hand = handRepository.getLastByPlayer(player);
       this.discardPile = discardPileRepository.getLastByPlayer(player);
       this.drawPile = drawPileRepository.getLastByPlayer(player);
     }
 
   public void saveAll(){
-    this.turnRepository.save(turn);
+    this.turnRepository.save(thisTurn);
     for (Card card: this.hand.getCardsInHand()){
       this.cardRepository.save(card);
     }
@@ -73,12 +76,12 @@ public class PlayerStateInfo implements Serializable {
     this.phaseState = phaseState;
   }
 
-  public Turn getTurn() {
-    return turn;
+  public Turn getThisTurn() {
+    return thisTurn;
   }
 
-  public void setTurn(Turn turn) {
-    this.turn = turn;
+  public void setThisTurn(Turn thisTurn) {
+    this.thisTurn = thisTurn;
   }
 
   public Player getPlayer() {

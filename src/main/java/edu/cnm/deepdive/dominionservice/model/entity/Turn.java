@@ -36,7 +36,7 @@ public class Turn implements Serializable {
     this.game = game;
   }
 
-  private CardRepository cardRepository;
+
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

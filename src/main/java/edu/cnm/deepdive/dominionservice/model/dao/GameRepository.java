@@ -7,11 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GameRepository extends CrudRepository {
-
-  Game save(Game game);
-
-  void delete(Game game);
+public interface GameRepository extends CrudRepository<Game, Long> {
 
   Game getGameById(long id);
 

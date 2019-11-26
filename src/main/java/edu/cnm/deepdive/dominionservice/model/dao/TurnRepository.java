@@ -2,6 +2,7 @@ package edu.cnm.deepdive.dominionservice.model.dao;
 import edu.cnm.deepdive.dominionservice.model.entity.Play;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn;
 import edu.cnm.deepdive.dominionservice.model.entity.Turn.TurnState;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,14 +14,12 @@ public interface TurnRepository extends JpaRepository<Turn,Long> {
 
 
 
-  Optional<Turn> getTurnById(Long id);
+  Turn getTurnById(Long id);
   
 
 
-  Iterable<Turn> getAllByOrderByKeyAsc();
-
-
-  Optional<Turn> getCurrentTurn();
+  Iterable<Turn> getAllByOrderByIdAsc();
+  ArrayList<Turn> getAllByOrderByIdDesc();
 
 
 

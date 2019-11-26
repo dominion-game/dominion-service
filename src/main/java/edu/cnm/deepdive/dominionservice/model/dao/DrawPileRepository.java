@@ -11,9 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DrawPileRepository extends CrudRepository {
-
-  ArrayList<DrawPile> getAllByGameOrderByPlayer(Game game);
+public interface DrawPileRepository extends CrudRepository<DrawPile, Long> {
 
 
   //TODO make this work- I dont know the exact query language for this

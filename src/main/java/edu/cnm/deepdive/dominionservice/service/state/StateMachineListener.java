@@ -5,7 +5,7 @@ import org.springframework.statemachine.state.State;
 
 import java.util.logging.Logger;
 
-public final class StateMachineListener <States, Events> extends StateMachineListenerAdapter {
+public class StateMachineListener <States, Events> extends StateMachineListenerAdapter {
 
   private static final Logger LOGGER = Logger.getLogger(StateMachineListener.class.getName());
   @Override
