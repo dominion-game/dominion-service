@@ -3,6 +3,8 @@ package edu.cnm.deepdive.dominionservice.model.enums;
 public enum Events {
   GAME_INTIALIZED,
   GAME_STARTS,
+  ONE_PLAYER_JOINS,
+  PLAYER_TWO_JOINS,
   GAME_FINISHES,
   RETURN_TO_LOBBY,
   END_ACTIONS,

@@ -48,7 +48,10 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<States
 
     builder.configureTransitions()
         .withExternal()
-        .source(States.INITIAL).target(States.GAME_PLAYING).event(Events.BEGIN_GAME)
+        .source(States.INITIAL).target(States.WAITING).event(Events.ONE_PLAYER_JOINS)
+        .and()
+        .withExternal()
+        .source(States.WAITING).target(States.GAME_PLAYING).event(Events.PLAYER_TWO_JOINS)
         .and()
         .withExternal()
         .source(States.GAME_PLAYING).target(States.PLAYER_1_TURN).event(Events.PLAYER_1_START)

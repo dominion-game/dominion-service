@@ -36,11 +36,36 @@ public class Player implements Serializable {
 
   private int extraGold;
 
+  @NonNull
+  @Column(nullable = false, updatable = false, unique = true)
+  private String oauthKey;
 
+  public int getExtraGold() {
+    return extraGold;
+  }
 
+  public void setExtraGold(int extraGold) {
+    this.extraGold = extraGold;
+  }
 
+  @NonNull
+  public String getOauthKey() {
+    return oauthKey;
+  }
 
-private int numAction;
+  public void setOauthKey(@NonNull String oauthKey) {
+    this.oauthKey = oauthKey;
+  }
+
+  public int getExtraGoldIfSilver() {
+    return extraGoldIfSilver;
+  }
+
+  public void setExtraGoldIfSilver(int extraGoldIfSilver) {
+    this.extraGoldIfSilver = extraGoldIfSilver;
+  }
+
+  private int numAction;
 private int numBuy;
 
   private int extraGoldIfSilver;

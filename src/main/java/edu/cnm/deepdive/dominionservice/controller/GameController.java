@@ -3,10 +3,16 @@ package edu.cnm.deepdive.dominionservice.controller;
 import edu.cnm.deepdive.dominionservice.model.dao.GameRepository;
 import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
+import edu.cnm.deepdive.dominionservice.model.enums.States;
+import edu.cnm.deepdive.dominionservice.service.GameLogic.Events;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
   private final GameRepository gameRepository;
+  private StateMachine<States, Events> stateMachine;
 
   @Autowired
   public GameController(GameRepository gameRepository) {
@@ -33,12 +40,23 @@ public class GameController {
 
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")
-  public GameStateInfo createNewGame(@RequestBody Game newGame) {
-   //TODO
-    GameStateInfo gameStateInfo = new GameStateInfo(newGame);
-    return gameStateInfo;
+  public GameStateInfo createNewGame(@RequestBody Game newGame, Authentication authentication) {
+    if (States.INITIAL.equals(stateMachine.getState())) {
+      //TODO create new game
+      signalMachine(Events.ONE_PLAYER_JOINS);
+    }else if (States.WAITING.equals(stateMachine.getState())){
+      signalMachine(Events.PLAYER_TWO_JOINS);
+    }
+   // GameStateInfo gameStateInfo = new GameStateInfo(newGame);
+    return null;
   }
-
+  void signalMachine(Events event) {
+    Message<Events> message = MessageBuilder
+        .withPayload(event)
+        .setHeader("Event Transition", event.toString())
+        .build();
+    stateMachine.sendEvent(message);
+  }
 
   @GetMapping(value = "/{id")
   public Game getGameinfo(@PathVariable("id") long id){

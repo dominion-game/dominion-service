@@ -38,22 +38,20 @@ public class DominionServiceApplication extends ResourceServerConfigurerAdapter
 
   @Override
   public void run(String... args) throws Exception {
-    stateMachine.sendEvent(Events.BEGIN_GAME);
-    stateMachine.sendEvent(Events.PLAYER_1_START);
-    stateMachine.sendEvent(Events.PLAYER_1_END);
-    stateMachine.sendEvent(Events.PLAYER_2_START);
-    stateMachine.sendEvent(Events.PLAYER_2_END);
-    stateMachine.sendEvent(Events.RETURN_TO_LOBBY);
+    stateMachine.sendEvent(Events.ONE_PLAYER_JOINS);
+    stateMachine.sendEvent(Events.PLAYER_TWO_JOINS);
+
   }
 
   //@Value("${oauth.clientId}")
  // private String clientId;
-
+/**
   @Override
   public void configure(HttpSecurity http) throws Exception {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     // http.authorizeRequests().anyRequest().anonymous();
     http.authorizeRequests().anyRequest().hasRole("USER");
   }
+  */
 
 }

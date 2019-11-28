@@ -3,6 +3,7 @@ package edu.cnm.deepdive.dominionservice.model.enums;
 public enum States {
   //super state not-playing
   INITIAL,
+  WAITING,
   GAME_PLAYING,
   GAME_START,
   GAME_END,

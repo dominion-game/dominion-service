@@ -14,7 +14,7 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
 
 
   Optional<Player> findPlayerById(Long id);
-
+  Optional<Player> getPlayerByOauthKey(String oauthKey);
   @Override
   void deleteAll();
 
