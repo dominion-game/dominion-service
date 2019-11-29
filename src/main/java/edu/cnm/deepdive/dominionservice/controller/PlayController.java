@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ public class PlayController {
 
   @PostMapping("/{cardid}/action")
   public GameStateInfo playCard(@PathVariable long gameId, int playerId, int cardId,
-      @RequestBody ArrayList<Card> cards, Authentication authentication){
+      @RequestBody ArrayList<Card> cards){
     if (cards == null){
       return gameLogic.playCardWithCards(cardId, gameId, playerId, null);
     }else {
@@ -40,12 +40,12 @@ public class PlayController {
   }
 
   @PostMapping("{cardid}/buy")
-  public GameStateInfo playerBuysTarget(@PathVariable int gameId, int playerId,CardType cardType, Authentication authentication){
+  public GameStateInfo playerBuysTarget(@PathVariable int gameId, int playerId,CardType cardType){
     return gameLogic.buyTarget(cardType, playerId, gameId);
   }
 
   @PostMapping("/endphase")
-  public GameStateInfo playerEndsPhase(@PathVariable int gameId, int playerId, String phaseState, Authentication authentication){
+  public GameStateInfo playerEndsPhase(@PathVariable int gameId, int playerId, String phaseState){
      return gameLogic.playerEndsPhase(gameId, playerId, phaseState);
   }
   @ResponseStatus(HttpStatus.NOT_FOUND)

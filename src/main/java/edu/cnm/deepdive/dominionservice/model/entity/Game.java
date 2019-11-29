@@ -1,18 +1,27 @@
 package edu.cnm.deepdive.dominionservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.cnm.deepdive.dominionservice.model.enums.Events;
+import edu.cnm.deepdive.dominionservice.model.enums.States;
+import edu.cnm.deepdive.dominionservice.service.state.ContextEntity;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.statemachine.StateMachineContext;
 
 
 /**
@@ -23,7 +32,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @Data
 @AllArgsConstructor
 @DynamicUpdate
-public class Game implements Serializable {
+public class Game extends AbstractPersistable<Long> implements Serializable, ContextEntity<States, Events, Long> {
 
   public Game(List<Stack> stacks,
       List<Player> players) {
@@ -41,6 +50,12 @@ public class Game implements Serializable {
   @GeneratedValue
   @Column(name = "game_id", updatable = false, nullable = false)
   private Long id;
+
+  @JsonIgnore
+  @Override
+  public boolean isNew() {
+    return super.isNew();
+  }
 
   /**
    * Returns a list of stacks. This list documents all of the stacks available to the players. It
@@ -99,5 +114,23 @@ public class Game implements Serializable {
    */
   public void setStacks(List<Stack> stacks) {
     this.stacks = stacks;
+  }
+
+  @Override
+  public StateMachineContext<States, Events> getStateMachineContext() {
+    return null;
+  }
+  @Getter
+  @Enumerated(EnumType.STRING)
+  States currentState;
+
+  @Getter
+  @JsonIgnore
+  StateMachineContext<States, Events> stateMachineContext;
+
+  @Override
+  public void setStateMachineContext(StateMachineContext context) {
+    this.currentState = stateMachineContext.getState();
+    this.stateMachineContext = stateMachineContext;
   }
 }

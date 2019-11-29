@@ -5,13 +5,16 @@ import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic.Events;
+import edu.cnm.deepdive.dominionservice.service.state.ContextEntity;
+import edu.cnm.deepdive.dominionservice.service.state.DefaultStateMachineAdapter;
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.Authentication;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
   private final GameRepository gameRepository;
+ // DefaultStateMachineAdapter<States, Events, ContextEntity<States, Events, ? extends Serializable>> gameStateMachineAdapter;
   private StateMachine<States, Events> stateMachine;
 
   @Autowired
@@ -40,7 +44,8 @@ public class GameController {
 
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")
-  public GameStateInfo createNewGame(@RequestBody Game newGame, Authentication authentication) {
+  public String createNewGame() {
+   // StateMachine<States, Events> stateMachine = gameStateMachineAdapter.restore(order);
     if (States.INITIAL.equals(stateMachine.getState())) {
       //TODO create new game
       signalMachine(Events.ONE_PLAYER_JOINS);
@@ -48,8 +53,24 @@ public class GameController {
       signalMachine(Events.PLAYER_TWO_JOINS);
     }
    // GameStateInfo gameStateInfo = new GameStateInfo(newGame);
-    return null;
+    return stateMachine.getState().toString();
   }
+  @GetMapping(value="/getstate")
+  public String getState() {
+
+    return stateMachine.getState().toString();
+  }
+  @PostMapping(value="/onejoins")
+  public String onePlayerJoins() {
+    signalMachine(Events.ONE_PLAYER_JOINS);
+    return stateMachine.getState().toString();
+  }
+  @PostMapping(value="/twojoins")
+  public String twoPlayerJoins() {
+    signalMachine(Events.PLAYER_TWO_JOINS);
+    return stateMachine.getState().toString();
+  }
+
   void signalMachine(Events event) {
     Message<Events> message = MessageBuilder
         .withPayload(event)
