@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice;
 
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
-import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 import org.springframework.statemachine.persist.StateMachinePersister;
@@ -88,19 +88,21 @@ public DefaultStateMachineAdapter<States, Events, ContextEntity<States, Events, 
   }
 
   @Bean
-  public StateMachinePersist<States, Events, ContextEntity<States, Events, Serializable>> persist() {
-    return new StateMachinePersist<States, Events, Serializable>() {
+  public StateMachinePersist<States, Events, Game> persist() {
+    return new StateMachinePersist<States, Events, Game>() {
 
       @Override
-      public void write(StateMachineContext stateMachineContext,
-          ContextEntity<States, Events, Serializable> order) throws Exception {
-       o.setStateMachineContext(stateMachineContext);
+      public void write(StateMachineContext<States, Events> stateMachineContext, Game game)
+          throws Exception {
+        game.setStateMachineContext(stateMachineContext);
       }
 
       @Override
-      public StateMachineContext read(ContextEntity<States, Events, Serializable> game) throws Exception {
+      public StateMachineContext<States, Events> read(Game game) throws Exception {
         return game.getStateMachineContext();
       }
+
+
 
 
     };

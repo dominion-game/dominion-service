@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.service.state;
 
 
+import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
@@ -10,9 +11,11 @@ import javax.persistence.Converter;
 
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateMachineContext;
+import com.esotericsoftware.kryo.*;
+
 import org.springframework.statemachine.kryo.MessageHeadersSerializer;
 import org.springframework.statemachine.kryo.StateMachineContextSerializer;
-import org.springframework.statemachine.kryo.UUIDSerializer;
+
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -32,7 +35,7 @@ public class StateMachineContextConverter implements AttributeConverter<StateMac
       Kryo kryo = new Kryo();
       kryo.addDefaultSerializer(StateMachineContext.class, new StateMachineContextSerializer());
       kryo.addDefaultSerializer(MessageHeaders.class, new MessageHeadersSerializer());
-      kryo.addDefaultSerializer(UUID.class, new UUIDSerializer());
+      kryo.addDefaultSerializer(UUID.class, (SerializerFactory) new UUIDSerializer());
       return kryo;
     }
   };

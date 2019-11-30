@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.dominionservice.service.state;
 
 
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.enums.Events;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import java.io.Serializable;
@@ -27,18 +28,19 @@ public class ContextObjectResourceProcessor<S, E, T extends ContextEntity<S, E, 
 
   final EntityLinks entityLinks;
 
-  final DefaultStateMachineAdapter<S, E, ContextEntity<S, E, ? extends Serializable>> stateMachineAdapter;
+  final DefaultStateMachineAdapter<S, E, Game>> stateMachineAdapter;
 
   @Override
   public Resource<T> process(Resource<T> resource) {
     ContextEntity<S, E, ? extends Serializable> contextObject = resource.getContent();
     StateMachine<S, E> stateMachine = null;
     try {
-      stateMachine = stateMachineAdapter.restore(contextObject);
+      stateMachine = stateMachineAdapter.restore((Game) contextObject);
     } catch (Exception e) {
       e.printStackTrace();
     }
 
+    assert stateMachine != null;
     for (Transition<S, E> transition : stateMachine.getTransitions()) {
       if(stateMachine.getState().getId().equals(transition.getSource().getId())) {
         E event = transition.getTrigger().getEvent();

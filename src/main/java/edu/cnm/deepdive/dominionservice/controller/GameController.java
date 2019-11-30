@@ -5,23 +5,25 @@ import edu.cnm.deepdive.dominionservice.model.dto.GameStateInfo;
 import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import edu.cnm.deepdive.dominionservice.model.enums.States;
 import edu.cnm.deepdive.dominionservice.service.GameLogic.Events;
-import edu.cnm.deepdive.dominionservice.service.state.ContextEntity;
 import edu.cnm.deepdive.dominionservice.service.state.DefaultStateMachineAdapter;
-import java.io.Serializable;
 import java.util.NoSuchElementException;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 //import org.springframework.security.core.Authentication;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +42,20 @@ public class GameController {
   }
 
 
+  DefaultStateMachineAdapter<States, Events, Game> gameStateMachineAdapter;
 
+  @RequestMapping(path = "/orders/{id}/receive/{event}", method = RequestMethod.POST)
+  @SneakyThrows
+  @Transactional
+  public HttpEntity<Void> receiveEvent(@PathVariable("id") Game game, @PathVariable("event") Events event) {
+    StateMachine<States, Events> stateMachine = gameStateMachineAdapter.restore(game);
+    if (stateMachine.sendEvent(event)) {
+      gameStateMachineAdapter.persist(stateMachine, game);
+      return ResponseEntity.accepted().build();
+    } else {
+      return ResponseEntity.unprocessableEntity().build();
+    }
+  }
 
   //TODO: Consider replacing with Firebase
   @PostMapping(value = "/create")

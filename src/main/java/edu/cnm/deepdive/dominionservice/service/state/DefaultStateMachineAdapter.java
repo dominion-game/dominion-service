@@ -1,5 +1,6 @@
 package edu.cnm.deepdive.dominionservice.service.state;
 
+import edu.cnm.deepdive.dominionservice.model.entity.Game;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.StateMachinePersister;
@@ -8,16 +9,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
-public class DefaultStateMachineAdapter<S, E, T> {
+public class DefaultStateMachineAdapter<S, E, T extends Game> {
 
   final StateMachineFactory<S, E> stateMachineFactory;
 
-  final StateMachinePersister<S, E, T> persister;
+  final StateMachinePersister<S, E, Game> persister;
 
   @SneakyThrows
-  public StateMachine<S, E> restore(T contextObject) throws Exception {
+  public StateMachine<S, E> restore(Game contextObject) throws Exception {
     StateMachine<S, E> stateMachine = stateMachineFactory.getStateMachine();
-    return persister.restore(stateMachine, contextObject);
+    return persister.restore(stateMachine,  contextObject);
   }
 
   @SneakyThrows

@@ -20,7 +20,7 @@ import lombok.SneakyThrows;
 class GameCreatedEventListener extends AbstractRepositoryEventListener<Game> {
 
   DefaultStateMachineAdapter<States, Events, ContextEntity<States, Events,
-      ? extends Serializable>> gameStateMachineAdapter;
+      ? extends Game>> gameStateMachineAdapter;
 
   @Override
   @SneakyThrows
